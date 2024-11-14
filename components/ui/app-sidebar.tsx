@@ -24,6 +24,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { FaUser } from "react-icons/fa";
 import { Separator } from "./separator";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 // Définition des types
 interface SubItem {
@@ -41,7 +44,7 @@ interface MenuItem {
 const items: MenuItem[] = [
   {
     title: "Home",
-    url: "#",
+    url: "/dashboard",
     icon: Home,
   },
   {
@@ -80,14 +83,14 @@ export function AppSidebar() {
 
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  Select Workspace
+                  <Image src="/vercel.svg" alt="vercel" width={30} height={30} className="bg-white ml-2" />
                   <ChevronDown className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -117,7 +120,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Separator />
+        <Separator className="bg-gray-700" />
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
@@ -163,6 +166,9 @@ export function AppSidebar() {
 // Composant pour gérer chaque item avec collapsible
 function CollapsibleMenuItem({ item }: { item: MenuItem }) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname(); // Obtient le chemin d'URL actuel
+
+  const isActive = pathname === item.url; // Vérifie si l'élément est actif
 
   const toggleCollapsible = () => setIsOpen(!isOpen);
 
@@ -170,15 +176,41 @@ function CollapsibleMenuItem({ item }: { item: MenuItem }) {
     <Collapsible defaultOpen={false} open={isOpen}>
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
-          <SidebarMenuButton onClick={toggleCollapsible} className="flex items-center justify-between w-full">
-            <div className="flex items-center">
-              <item.icon />
-              <span className="ml-2">{item.title}</span>
-            </div>
-            {item.subItems ? (
-              isOpen ? <ChevronDown className="ml-auto" /> : <ChevronRight className="ml-auto" />
-            ) : null}
-          </SidebarMenuButton>
+          {/* Vérifier si l'élément a un sous-menu ou non */}
+          {item.subItems ? (
+            <SidebarMenuButton
+              onClick={toggleCollapsible}
+              className={cn(
+                "flex items-center justify-between w-full hover:bg-[#3B4A58] hover:text-[#3CB1F5]",
+                isActive
+                  ? "bg-[#3B4A58] text-[#3CB1F5] border-r-4 border-blue-500"
+                  : "text-[#C8C8C8]"
+              )}
+            >
+              <div className="flex items-center">
+                <item.icon className="ml-2" />
+                <span className="ml-4">{item.title}</span>
+              </div>
+              {isOpen ? <ChevronDown className="ml-auto" /> : <ChevronRight className="ml-auto" />}
+            </SidebarMenuButton>
+          ) : (
+            // Si l'élément n'a pas de sous-menu, utiliser un lien pour rediriger
+            <Link href={item.url} className="w-full" passHref>
+              <SidebarMenuButton
+                className={cn(
+                  "flex items-center justify-between w-full hover:bg-[#3B4A58] hover:text-[#3CB1F5]",
+                  isActive
+                    ? "bg-[#3B4A58] text-[#3CB1F5] border-r-4 border-blue-500"
+                    : "text-[#C8C8C8]"
+                )}
+              >
+                <div className="flex items-center">
+                  <item.icon className="ml-2" />
+                  <span className="ml-4">{item.title}</span>
+                </div>
+              </SidebarMenuButton>
+            </Link>
+          )}
         </CollapsibleTrigger>
 
         {/* Sous-menus pliables */}
@@ -187,7 +219,10 @@ function CollapsibleMenuItem({ item }: { item: MenuItem }) {
             <SidebarMenuSub>
               {item.subItems.map((subItem) => (
                 <SidebarMenuSubItem key={subItem.title}>
-                  <SidebarMenuSubButton asChild>
+                  <SidebarMenuSubButton
+                    className={pathname === subItem.url ? "bg-[#3B4A58] text-[#3CB1F5] border-r-4 border-blue-500 " : "text-[#C8C8C8]"}
+                    asChild
+                  >
                     <a href={subItem.url}>{subItem.title}</a>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
@@ -199,3 +234,5 @@ function CollapsibleMenuItem({ item }: { item: MenuItem }) {
     </Collapsible>
   );
 }
+
+
