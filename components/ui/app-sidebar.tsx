@@ -27,14 +27,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useEffect } from "react";
-import { getUserWorkspaces } from "@/actions/workspace";
-
-interface Workspace {
-  id: string;
-  name: string;
-  createdAt: string;
-}
+import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
 
 interface SubItem {
   title: string;
@@ -87,28 +80,13 @@ const items: MenuItem[] = [
 export function AppSidebar() {
   const user = useCurrentUser();
   const router = useRouter();
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(null);
-
-  useEffect(() => {
-    const loadWorkspaces = async () => {
-      const { workspaces, error } = await getUserWorkspaces();
-      if (workspaces && !error) {
-        setWorkspaces(workspaces);
-        if (workspaces.length > 0) {
-          setCurrentWorkspace(workspaces[0]);
-        }
-      }
-    };
-
-    loadWorkspaces();
-  }, []);
+  const { currentWorkspace, workspaces, setCurrentWorkspace } = useCurrentWorkspace();
 
   const handleNewWorkspace = () => {
     router.push("/workspace/select");
   };
 
-  const handleWorkspaceSelect = (workspace: Workspace) => {
+  const handleWorkspaceSelect = (workspace: any) => {
     setCurrentWorkspace(workspace);
     router.push(`/workspace/${workspace.id}`);
   };

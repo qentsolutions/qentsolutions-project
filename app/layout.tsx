@@ -4,6 +4,7 @@ import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
 import './globals.css'
 import { Toaster } from "@/components/ui/sonner";
+import { WorkspaceProvider } from '@/hooks/use-current-workspace';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,12 +22,14 @@ export default async function RootLayout({
 
   return (
     <SessionProvider session={session}>
-      <html lang="en">
-        <body className={inter.className}>
-          <Toaster />
-          {children}
-        </body>
-      </html>
+      <WorkspaceProvider>
+        <html lang="en">
+          <body className={inter.className}>
+            <Toaster />
+            {children}
+          </body>
+        </html>
+      </WorkspaceProvider>
     </SessionProvider>
   )
 }

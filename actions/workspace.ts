@@ -9,6 +9,60 @@ const WorkspaceSchema = z.object({
   name: z.string().min(1, "Name is required"),
 });
 
+const UpdateWorkspaceSchema = z.object({
+  name: z.string().min(1, "Workspace name is required"),
+  workspaceId: z.string().min(1, "Workspace ID is required"),
+  logo: z.string().optional(),
+});
+
+export const updateWorkspace = async (
+  values: z.infer<typeof UpdateWorkspaceSchema>
+) => {
+  try {
+    const validatedFields = UpdateWorkspaceSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: "Invalid fields!" };
+    }
+
+    const user = await currentUser();
+
+    if (!user) {
+      return { error: "Unauthorized" };
+    }
+
+    // Verify user has permission to update this workspace
+    const workspace = await db.workspace.findFirst({
+      where: {
+        id: values.workspaceId,
+        members: {
+          some: {
+            userId: user.id,
+            role: UserRole.ADMIN,
+          },
+        },
+      },
+    });
+
+    if (!workspace) {
+      return { error: "Workspace not found or unauthorized" };
+    }
+
+    const updatedWorkspace = await db.workspace.update({
+      where: {
+        id: values.workspaceId,
+      },
+      data: {
+        name: values.name,
+      },
+    });
+
+    return { success: "Workspace updated!", workspace: updatedWorkspace };
+  } catch (error) {
+    return { error: "Something went wrong!" };
+  }
+};
+
 export const createWorkspace = async (
   values: z.infer<typeof WorkspaceSchema>
 ) => {
@@ -45,7 +99,6 @@ export const createWorkspace = async (
 
     return { workspaceId: workspace.id };
   } catch (error) {
-    // Retourner un message d'erreur simple (et non un objet Error)
     return {
       error: error instanceof Error ? error.message : "Something went wrong!",
     };
