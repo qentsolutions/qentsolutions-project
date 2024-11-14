@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Calendar, ChevronDown, ChevronRight, ChevronUp, Home, Inbox, Power, Search, Settings, User2 } from "lucide-react";
+import { Calendar, ChevronDown, ChevronRight, ChevronUp, Home, Inbox, Plus, Power, Search, Settings, User2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,7 +16,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { LogoutButton } from "../auth/logout-button";
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -24,11 +24,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { FaUser } from "react-icons/fa";
 import { Separator } from "./separator";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useEffect } from "react";
+import { getUserWorkspaces } from "@/actions/workspace";
 
-// Définition des types
+interface Workspace {
+  id: string;
+  name: string;
+  createdAt: string;
+}
+
 interface SubItem {
   title: string;
   url: string;
@@ -37,8 +44,8 @@ interface SubItem {
 interface MenuItem {
   title: string;
   url: string;
-  icon: React.ElementType; // Utilisation de React.ElementType pour l'icône
-  subItems?: SubItem[]; // Optionnel, car certains items n'ont pas de sous-menus
+  icon: React.ElementType;
+  subItems?: SubItem[];
 }
 
 const items: MenuItem[] = [
@@ -78,9 +85,33 @@ const items: MenuItem[] = [
 ];
 
 export function AppSidebar() {
-
   const user = useCurrentUser();
+  const router = useRouter();
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(null);
 
+  useEffect(() => {
+    const loadWorkspaces = async () => {
+      const { workspaces, error } = await getUserWorkspaces();
+      if (workspaces && !error) {
+        setWorkspaces(workspaces);
+        if (workspaces.length > 0) {
+          setCurrentWorkspace(workspaces[0]);
+        }
+      }
+    };
+
+    loadWorkspaces();
+  }, []);
+
+  const handleNewWorkspace = () => {
+    router.push("/workspace/select");
+  };
+
+  const handleWorkspaceSelect = (workspace: Workspace) => {
+    setCurrentWorkspace(workspace);
+    router.push(`/workspace/${workspace.id}`);
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -91,15 +122,23 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
                   <Image src="/vercel.svg" alt="vercel" width={30} height={30} className="bg-white ml-2" />
+                  <span className="ml-2">{currentWorkspace?.name || "Select a workspace"}</span>
                   <ChevronDown className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
-                  <span>Acme Inc</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Acme Corp.</span>
+                {workspaces.map((workspace) => (
+                  <DropdownMenuItem
+                    key={workspace.id}
+                    onClick={() => handleWorkspaceSelect(workspace)}
+                  >
+                    <span>{workspace.name}</span>
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleNewWorkspace}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  <span>New Workspace</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -159,24 +198,20 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-    </Sidebar >
+    </Sidebar>
   );
 }
 
-// Composant pour gérer chaque item avec collapsible
 function CollapsibleMenuItem({ item }: { item: MenuItem }) {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname(); // Obtient le chemin d'URL actuel
-
-  const isActive = pathname === item.url; // Vérifie si l'élément est actif
-
+  const pathname = usePathname();
+  const isActive = pathname === item.url;
   const toggleCollapsible = () => setIsOpen(!isOpen);
 
   return (
     <Collapsible defaultOpen={false} open={isOpen}>
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
-          {/* Vérifier si l'élément a un sous-menu ou non */}
           {item.subItems ? (
             <SidebarMenuButton
               onClick={toggleCollapsible}
@@ -194,7 +229,6 @@ function CollapsibleMenuItem({ item }: { item: MenuItem }) {
               {isOpen ? <ChevronDown className="ml-auto" /> : <ChevronRight className="ml-auto" />}
             </SidebarMenuButton>
           ) : (
-            // Si l'élément n'a pas de sous-menu, utiliser un lien pour rediriger
             <Link href={item.url} className="w-full" passHref>
               <SidebarMenuButton
                 className={cn(
@@ -213,7 +247,6 @@ function CollapsibleMenuItem({ item }: { item: MenuItem }) {
           )}
         </CollapsibleTrigger>
 
-        {/* Sous-menus pliables */}
         {item.subItems && (
           <CollapsibleContent>
             <SidebarMenuSub>
@@ -234,5 +267,3 @@ function CollapsibleMenuItem({ item }: { item: MenuItem }) {
     </Collapsible>
   );
 }
-
-
