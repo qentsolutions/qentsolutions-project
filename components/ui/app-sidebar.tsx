@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
-import { Calendar, ChevronDown, ChevronRight, Home, Inbox, Search, Settings } from "lucide-react";
+import { Calendar, ChevronDown, ChevronRight, ChevronUp, Home, Inbox, Power, Search, Settings, User2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -17,6 +18,12 @@ import {
 } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
+import { LogoutButton } from "../auth/logout-button";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { FaUser } from "react-icons/fa";
+import { Separator } from "./separator";
+import Link from "next/link";
 
 // Définition des types
 interface SubItem {
@@ -68,6 +75,10 @@ const items: MenuItem[] = [
 ];
 
 export function AppSidebar() {
+
+  const user = useCurrentUser();
+
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -105,7 +116,47 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-    </Sidebar>
+      <SidebarFooter>
+        <Separator />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <Avatar>
+                    <AvatarImage src={user?.image || ""} />
+                    <AvatarFallback className="bg-sky-500">
+                      <FaUser className="text-white" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="ml-2">{user?.name}</span>
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <Link href="/account">
+                  <DropdownMenuItem>
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                </Link>
+                <DropdownMenuItem>
+                  <span>Billing</span>
+                </DropdownMenuItem>
+                <LogoutButton>
+                  <DropdownMenuItem className="flex items-center justify-between">
+                    <span>Sign out</span>
+                    <span><Power className="text-red-500" size={14} /></span>
+                  </DropdownMenuItem>
+                </LogoutButton>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar >
   );
 }
 
