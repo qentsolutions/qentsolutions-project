@@ -16,7 +16,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { LogoutButton } from "../auth/logout-button";
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -91,6 +91,7 @@ export function AppSidebar() {
     router.push(`/workspace/${workspace.id}`);
   };
 
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -105,17 +106,38 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
+                <DropdownMenuLabel className="text-xs  font-normal text-gray-600 flex items-center justify-between">
+                  {user?.email}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 {workspaces.map((workspace) => (
                   <DropdownMenuItem
                     key={workspace.id}
                     onClick={() => handleWorkspaceSelect(workspace)}
                   >
+                    {workspace.logo ? (
+                      <div className="w-6 h-6 bg-gray-100 flex items-center justify-center rounded">
+                        <Image
+                          src={workspace.logo}
+                          alt={workspace.name}
+                          width={24}
+                          height={24}
+                          className="object-cover rounded"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded">
+                        <span className="font-semibold">
+                          {workspace.name?.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                     <span>{workspace.name}</span>
                   </DropdownMenuItem>
                 ))}
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-gray-200" />
                 <DropdownMenuItem onClick={handleNewWorkspace}>
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className=" h-4 w-4" />
                   <span>New Workspace</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -162,9 +184,11 @@ export function AppSidebar() {
                     <span>Account</span>
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem>
-                  <span>Billing</span>
-                </DropdownMenuItem>
+                <Link href="/billing">
+                  <DropdownMenuItem>
+                    <span>Billing</span>
+                  </DropdownMenuItem>
+                </Link>
                 <LogoutButton>
                   <DropdownMenuItem className="flex items-center justify-between">
                     <span>Sign out</span>

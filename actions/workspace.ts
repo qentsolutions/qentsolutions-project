@@ -125,6 +125,7 @@ export const getUserWorkspaces = async () => {
         id: true,
         name: true,
         createdAt: true,
+        logo: true,
         members: {
           select: {
             role: true,

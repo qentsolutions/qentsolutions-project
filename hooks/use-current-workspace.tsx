@@ -8,6 +8,7 @@ interface Workspace {
   id: string;
   name: string;
   createdAt: string;
+  logo: string | null;
   members: {
     role: string;
     user: {
