@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Calendar, ChevronDown, ChevronRight, ChevronUp, Home, Inbox, Plus, Power, Search, Settings, User2 } from "lucide-react";
+import { Calendar, ChevronDown, ChevronRight, ChevronUp, Home, Inbox, Plus, Power, Search, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,6 +15,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
@@ -216,6 +217,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

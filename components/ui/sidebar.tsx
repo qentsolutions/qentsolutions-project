@@ -15,9 +15,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { ViewVerticalIcon } from "@radix-ui/react-icons"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { ChevronFirst, ChevronRight } from "lucide-react"
+import { ChevronFirst } from "lucide-react"
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
