@@ -248,7 +248,7 @@ const Sidebar = React.forwardRef<
         >
           <div
             data-sidebar="sidebar"
-            className="flex h-full bg-[#1D2430] w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+            className="flex h-full bg-[#1D2430] w-full flex-col  group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
           >
             {children}
           </div>
@@ -512,7 +512,7 @@ const SidebarMenuItem = React.forwardRef<
 SidebarMenuItem.displayName = "SidebarMenuItem"
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex text-[#C8C8C8] w-full items-center gap-2 overflow-hidden  p-2 text-left text-sm outline-none transition-none disabled:pointer-events-none disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  "peer/menu-button flex text-[#C8C8C8] w-full items-center gap-2 overflow-hidden p-2 text-left text-sm outline-none transition-none disabled:pointer-events-none disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -520,7 +520,7 @@ const sidebarMenuButtonVariants = cva(
         outline: "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))]",
       },
       size: {
-        default: "h-12 text-sm",
+        default: "h-10 text-sm",
         sm: "h-7 text-xs",
         lg: "h-12 text-sm",
       },
@@ -723,7 +723,7 @@ const SidebarMenuSubButton = React.forwardRef<
       data-size={size}
       data-active={isActive}
       className={cn(
-        "flex h-12 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-[#C8C8C8] hover:bg-[#3B4A58] hover:text-[#3CB1F5] outline-none ring-sidebar-ring focus-visible:ring-2 active:bg-transparent active:text-[#C8C8C8] disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-[#C8C8C8]",
+        "flex h-10 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-[#C8C8C8] hover:bg-[#3B4A58] hover:text-[#3CB1F5] outline-none ring-sidebar-ring focus-visible:ring-2 active:bg-transparent active:text-[#C8C8C8] disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-[#C8C8C8]",
         size === "sm" && "text-xs",
         size === "md" && "text-sm",
         "group-data-[collapsible=icon]:hidden",

@@ -100,7 +100,23 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <Image src="/vercel.svg" alt="vercel" width={30} height={30} className="bg-white ml-2" />
+                  {currentWorkspace?.logo ? (
+                    // Afficher le logo du workspace
+                    <Image
+                      src={currentWorkspace.logo}
+                      alt={currentWorkspace.name}
+                      width={30}
+                      height={30}
+                      className="object-cover rounded bg-white ml-2"
+                    />
+                  ) : (
+                    // Afficher l'initiale du nom du workspace
+                    <div className="w-8 h-8 bg-blue-500 text-white flex items-center justify-center rounded ml-2">
+                      <span className="font-semibold">
+                        {currentWorkspace?.name?.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
                   <span className="ml-2">{currentWorkspace?.name || "Select a workspace"}</span>
                   <ChevronDown className="ml-auto" />
                 </SidebarMenuButton>
@@ -109,7 +125,7 @@ export function AppSidebar() {
                 <DropdownMenuLabel className="text-xs  font-normal text-gray-600 flex items-center justify-between">
                   {user?.email}
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-gray-200" />
                 {workspaces.map((workspace) => (
                   <DropdownMenuItem
                     key={workspace.id}
@@ -136,7 +152,7 @@ export function AppSidebar() {
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator className="bg-gray-200" />
-                <DropdownMenuItem onClick={handleNewWorkspace}>
+                <DropdownMenuItem className="text-xs text-gray-500" onClick={handleNewWorkspace}>
                   <Plus className=" h-4 w-4" />
                   <span>New Workspace</span>
                 </DropdownMenuItem>
