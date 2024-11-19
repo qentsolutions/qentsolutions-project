@@ -33,11 +33,7 @@ import { LogoutButton } from "../auth/logout-button"
 export function NavUser({
     user,
 }: {
-    user: {
-        name: string
-        email: string
-        image: string
-    }
+    user: any
 }) {
     const { isMobile } = useSidebar()
     const router = useRouter() // Utilisation de useRouter
@@ -58,11 +54,10 @@ export function NavUser({
                         >
                             <Avatar className="h-8 w-8 rounded-lg">
                                 <AvatarImage src={user.image} alt={user.name} />
-                                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="truncate font-semibold">{user?.name}</span>
-                                <span className="truncate text-xs">{user.email}</span>
+                                <span className="truncate lowercase">{user?.role}</span>
                             </div>
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
@@ -110,7 +105,7 @@ export function NavUser({
                         <DropdownMenuSeparator />
                         <LogoutButton>
                             <DropdownMenuItem onClick={() => handleNavigation('/logout')}>
-                                <LogOut />
+                                <LogOut className="text-red-500" />
                                 Log out
                             </DropdownMenuItem>
                         </LogoutButton>

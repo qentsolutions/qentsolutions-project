@@ -93,7 +93,7 @@ export function TeamSwitcher({
                             <DropdownMenuItem
                                 key={workspace.id}
                                 onClick={() => handleWorkspaceSelect(workspace)}
-                                className={`${currentWorkspace?.id === workspace.id ? "bg-blue-100 text-black" : "text-muted-foreground"
+                                className={`${currentWorkspace?.id === workspace.id ? "bg-blue-50 text-black" : "text-muted-foreground"
                                     }`}  // Condition pour appliquer le fond bleu si c'est le workspace sélectionné
                             >
                                 {workspace.logo ? (
