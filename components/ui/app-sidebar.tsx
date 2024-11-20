@@ -27,6 +27,7 @@ import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { useCurrentWorkspace } from "@/hooks/use-current-workspace"
 
 // This is sample data.
 
@@ -34,7 +35,8 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const user = useCurrentUser();
-
+  const { currentWorkspace } = useCurrentWorkspace();
+  const workspaceId = currentWorkspace?.id;
 
   const data = {
     user: {
@@ -61,14 +63,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
     navMain: [
       {
-        title: "Playground",
+        title: "Dashboard",
         url: "#",
         icon: SquareTerminal,
         isActive: true,
         items: [
           {
-            title: "History",
-            url: "#",
+            title: "Projects",
+            url: `/workspace/${workspaceId}/board`,
           },
           {
             title: "Starred",

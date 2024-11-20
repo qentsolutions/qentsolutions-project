@@ -1,23 +1,40 @@
-
 import { db } from "@/lib/db";
 import { BoardNavbar } from "./_components/board-navbar";
 import { ListContainer } from "./_components/list-container";
+import { getSession } from "next-auth/react";
+import { currentUser } from "@/lib/auth";
 
 interface BoardIdPageProps {
   params: {
     boardId: string;
+    workspaceId: string;
   };
+  userId: string; // Id de l'utilisateur, à obtenir depuis la session ou le token JWT
 }
 
-const BoardIdPage = async ({ params }: BoardIdPageProps) => {
-  const workspaceId = "cm3puk9oe000jwzg92s4ovtch";
+const BoardIdPage = async ({ params, userId }: BoardIdPageProps) => {
+  const user = await currentUser();
+  console.log("user :" + user)
 
+  const isUserMember = await db.workspaceMember.findUnique({
+    where: {
+      workspaceId_userId: {
+        workspaceId: params.workspaceId,
+        userId: user?.id ?? '',
+      },
+    },
+  });
 
+  // Si l'utilisateur n'est pas membre du workspace, retournez une page d'erreur
+  if (!isUserMember) {
+    return <div>Access Denied: You are not a member of this workspace</div>;
+  }
 
+  // Récupérer les données du board
   const board = await db.board.findUnique({
     where: {
       id: params.boardId,
-      workspaceId,
+      workspaceId: params.workspaceId,
     },
     include: {
       lists: {
@@ -35,6 +52,9 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
     },
   });
 
+  if (!board) {
+    return <div>Board not found</div>;
+  }
 
   return (
     <div className="relative h-full bg-white">
@@ -79,7 +99,7 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
               />
             </div>
           </div>
-          <ListContainer boardId={board?.id} data={board?.lists} />
+          <ListContainer boardId={board?.id} data={board.lists} />
         </div>
       </main>
     </div>
