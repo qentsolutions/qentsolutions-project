@@ -69,7 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         isActive: true,
         items: [
           {
-            title: "Projects",
+            title: "Boards",
             url: `/workspace/${workspaceId}/board`,
           },
           {

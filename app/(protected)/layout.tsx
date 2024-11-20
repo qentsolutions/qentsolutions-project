@@ -10,8 +10,8 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main>
-        <SidebarTrigger />
+      <main className="w-full">
+        <SidebarTrigger className="fixed" />
         {children}
       </main>
     </SidebarProvider>

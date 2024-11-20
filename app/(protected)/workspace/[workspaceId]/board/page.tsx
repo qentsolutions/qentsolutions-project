@@ -8,8 +8,7 @@ const BoardPage = () => {
 
   return (
     <div className="w-full mb-20">
-      <Separator className="my-4" />
-      <div className="px-2 md:px-4">
+      <div className="px-2 md:px-4 w-full">
           <BoardList />
       </div>
     </div>

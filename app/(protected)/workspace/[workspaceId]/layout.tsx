@@ -1,16 +1,21 @@
+import { QueryProvider } from "@/providers/query-provider";
+
 interface WorkspaceLayoutProps {
-    children: React.ReactNode;
-    params: {
-      workspaceId: string;
-    };
-  }
-  
-  const WorkspaceLayout = ({ children, params }: WorkspaceLayoutProps) => {
-    return (
-      <div className="h-full">
+  children: React.ReactNode;
+  params: {
+    workspaceId: string;
+  };
+}
+
+const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
+  return (
+    <QueryProvider>
+      <div className="h-full w-full">
         {children}
       </div>
-    );
-  };
-  
-  export default WorkspaceLayout;
+    </QueryProvider>
+
+  );
+};
+
+export default WorkspaceLayout;

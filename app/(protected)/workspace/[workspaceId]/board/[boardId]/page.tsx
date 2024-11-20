@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
-import { BoardNavbar } from "./_components/board-navbar";
-import { ListContainer } from "./_components/list-container";
+import { BoardNavbar } from "./components/board-navbar";
+import { ListContainer } from "./components/list-container";
 import { getSession } from "next-auth/react";
 import { currentUser } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
@@ -58,9 +58,9 @@ const BoardIdPage = async ({ params, userId }: BoardIdPageProps) => {
   }
 
   return (
-    <div className="relative h-full bg-white">
+    <div className="bg-white">
       <BoardNavbar board={board} />
-      <main className="relative pt-28 h-full mx-auto max-w-6xl p-4">
+      <main className="relative  h-full mx-auto max-w-6xl p-4">
         <div className="flex flex-col h-full">
           <div className="flex items-center gap-x-2 text-lg font-semibold mb-6">
             <div className="flex items-center gap-2">
@@ -100,7 +100,10 @@ const BoardIdPage = async ({ params, userId }: BoardIdPageProps) => {
               />
             </div>
           </div>
-          <ListContainer boardId={board?.id} data={board.lists} />
+          <div className="overflow-x-auto">
+            <ListContainer boardId={board?.id} data={board.lists} />
+
+          </div>
         </div>
       </main>
     </div>

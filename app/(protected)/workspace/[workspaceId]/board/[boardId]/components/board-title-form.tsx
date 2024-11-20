@@ -47,11 +47,11 @@ export const BoardTitleForm = ({ data }: BoardTitleFormProps) => {
   const onSubmit = (formData: FormData) => {
     const title = formData.get("title") as string;
     const workspaceId = currentWorkspace?.id;
-    if(!workspaceId) {
+    if (!workspaceId) {
       toast.error("Workspace ID is required.");
       return;
     }
-    
+
     execute({
       title,
       id: data.id,

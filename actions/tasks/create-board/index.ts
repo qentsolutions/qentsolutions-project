@@ -13,17 +13,14 @@ import { currentUser } from "@/lib/auth";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const user = currentUser();
-  
+
   if (!user) {
     throw new Error("User not found!");
   }
 
   const { title, workspaceId } = data;
 
-
-  if (
-    !workspaceId
-  ) {
+  if (!workspaceId) {
     return {
       error: "Missing fields. Failed to create board.",
     };
