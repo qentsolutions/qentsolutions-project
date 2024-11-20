@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -11,6 +10,18 @@ generator client {
 enum UserRole {
   ADMIN
   USER
+}
+
+enum ACTION {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum ENTITY_TYPE {
+  BOARD
+  LIST
+  CARD
 }
 
 model User {
@@ -26,17 +37,20 @@ model User {
   twoFactorConfirmation TwoFactorConfirmation?
   workspaces            WorkspaceMember[]
   createdWorkspaces     Workspace[]            @relation("CreatedBy")
+  boards                Board[]
+  auditLogs             AuditLog[]
 }
 
 model Workspace {
-  id   String  @id @default(cuid())
-  name String
-  logo String?
+  id          String            @id @default(cuid())
+  name        String
+  logo        String?
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   createdById String
   createdBy   User              @relation("CreatedBy", fields: [createdById], references: [id])
   members     WorkspaceMember[]
+  boards      Board[]
 }
 
 model WorkspaceMember {
@@ -49,6 +63,67 @@ model WorkspaceMember {
   joinedAt    DateTime  @default(now())
 
   @@unique([workspaceId, userId])
+}
+
+model Board {
+  id            String @id @default(uuid())
+  workspaceId   String
+  title         String
+  lists         List[]
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User User[]
+}
+
+model List {
+  id    String @id @default(uuid())
+  title String
+  order Int
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards   Card[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([boardId])
+}
+
+model Card {
+  id          String  @id @default(uuid())
+  title       String
+  order       Int
+  description String? @db.Text
+
+  listId String
+  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([listId])
+}
+
+model AuditLog {
+  id          String      @id @default(uuid())
+  workspaceId String
+  action      ACTION
+  entityId    String
+  entityType  ENTITY_TYPE
+  entityTitle String
+  userId      String
+  userImage   String      @db.Text
+  userName    String      @db.Text
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Account {
