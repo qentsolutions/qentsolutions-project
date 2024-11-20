@@ -3,6 +3,7 @@ import { BoardNavbar } from "./_components/board-navbar";
 import { ListContainer } from "./_components/list-container";
 import { getSession } from "next-auth/react";
 import { currentUser } from "@/lib/auth";
+import { notFound, redirect } from "next/navigation";
 
 interface BoardIdPageProps {
   params: {
@@ -14,7 +15,6 @@ interface BoardIdPageProps {
 
 const BoardIdPage = async ({ params, userId }: BoardIdPageProps) => {
   const user = await currentUser();
-  console.log("user :" + user)
 
   const isUserMember = await db.workspaceMember.findUnique({
     where: {
@@ -27,7 +27,8 @@ const BoardIdPage = async ({ params, userId }: BoardIdPageProps) => {
 
   // Si l'utilisateur n'est pas membre du workspace, retournez une page d'erreur
   if (!isUserMember) {
-    return <div>Access Denied: You are not a member of this workspace</div>;
+    // redirect to board
+    redirect(`/workspace/${params.workspaceId}/board`);
   }
 
   // Récupérer les données du board

@@ -1,9 +1,10 @@
+"use client";
 import { Separator } from "@/components/ui/separator";
 
 import { BoardList } from "./components/board-list";
 
 
-const BoardPage = async () => {
+const BoardPage = () => {
 
   return (
     <div className="w-full mb-20">

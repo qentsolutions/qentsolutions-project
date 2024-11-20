@@ -5,6 +5,7 @@ import Link from "next/link";
 import { User2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FormPopover } from "@/components/form/form-popover";
+import { useParams, useRouter } from "next/navigation"; // Utilisation de useRouter pour récupérer les params d'URL
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
 
 type Board = {
@@ -19,13 +20,15 @@ export const BoardList = () => {
   const { currentWorkspace } = useCurrentWorkspace();
   const workspaceId = currentWorkspace?.id;
 
+  // Récupérer workspaceId depuis les paramètres de l'URL
+  //  const { workspaceId } = useParams();
   useEffect(() => {
+    if (!workspaceId) return;
+
     const fetchBoards = async () => {
       try {
-        const response = await fetch("/api/boards", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ workspaceId }),
+        const response = await fetch(`/api/boards?workspaceId=${workspaceId}`, {
+          method: "GET",
         });
         if (!response.ok) throw new Error("Failed to fetch boards");
         const data = await response.json();
@@ -38,11 +41,7 @@ export const BoardList = () => {
     };
 
     fetchBoards();
-  }, [workspaceId]);
-
-  if (loading) {
-    return <SkeletonBoardList />;
-  }
+  }, [workspaceId]); // Recharger uniquement quand workspaceId change
 
   return (
     <div className="space-y-4">
@@ -54,7 +53,7 @@ export const BoardList = () => {
         {boards.map((board) => (
           <Link
             key={board.id}
-            href={`board/${board.id}`}
+            href={`/workspace/${workspaceId}/board/${board.id}`} // Utilisation de l'ID du board pour la route dynamique
             className="group relative aspect-video bg-no-repeat bg-center bg-cover bg-sky-700 rounded-sm h-full w-full p-2 overflow-hidden"
             style={{ backgroundImage: `url(${board.imageThumbUrl})` }}
           >
@@ -63,7 +62,7 @@ export const BoardList = () => {
           </Link>
         ))}
         {workspaceId && (
-          <FormPopover sideOffset={10} side="right" workspaceId={workspaceId}>
+          <FormPopover sideOffset={10} side="right" workspaceId={String(workspaceId)}>
             <div
               role="button"
               className="aspect-video relative h-full w-full bg-muted rounded-sm flex flex-col gap-y-1 items-center justify-center hover:opacity-75 transition"
@@ -77,15 +76,3 @@ export const BoardList = () => {
   );
 };
 
-const SkeletonBoardList = () => (
-  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-    <Skeleton className="aspect-video h-full w-full p-2" />
-    <Skeleton className="aspect-video h-full w-full p-2" />
-    <Skeleton className="aspect-video h-full w-full p-2" />
-    <Skeleton className="aspect-video h-full w-full p-2" />
-    <Skeleton className="aspect-video h-full w-full p-2" />
-    <Skeleton className="aspect-video h-full w-full p-2" />
-    <Skeleton className="aspect-video h-full w-full p-2" />
-    <Skeleton className="aspect-video h-full w-full p-2" />
-  </div>
-);
