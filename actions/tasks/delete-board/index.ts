@@ -44,7 +44,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     };
   }
 
-  revalidatePath(`/workspace/${workspaceId}`);
+  revalidatePath(`/workspace/${workspaceId}board/${board.id}`);
   redirect(`/workspace/${workspaceId}`);
 };
 

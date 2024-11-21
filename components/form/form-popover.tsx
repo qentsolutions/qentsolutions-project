@@ -15,6 +15,7 @@ import { FormInput } from "./form-input";
 import { FormSubmit } from "./form-submit";
 import { createBoard } from "@/actions/tasks/create-board";
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 interface FormPopoverProps {
   children: React.ReactNode;
@@ -53,15 +54,12 @@ export const FormPopover = ({
   }
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         {children}
-      </PopoverTrigger>
-      <PopoverContent
-        align={align}
+      </DialogTrigger>
+      <DialogContent
         className="w-80 pt-3"
-        side={side}
-        sideOffset={sideOffset}
       >
         <div className="text-sm font-medium text-center text-neutral-600 pb-4">
           Create board
@@ -79,7 +77,7 @@ export const FormPopover = ({
             Create
           </FormSubmit>
         </form>
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 };

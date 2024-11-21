@@ -1,19 +1,17 @@
 import { db } from "@/lib/db";
 import { BoardNavbar } from "./components/board-navbar";
 import { ListContainer } from "./components/list-container";
-import { getSession } from "next-auth/react";
 import { currentUser } from "@/lib/auth";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 interface BoardIdPageProps {
   params: {
     boardId: string;
     workspaceId: string;
   };
-  userId: string; // Id de l'utilisateur, à obtenir depuis la session ou le token JWT
 }
 
-const BoardIdPage = async ({ params, userId }: BoardIdPageProps) => {
+const BoardIdPage = async ({ params }: BoardIdPageProps) => {
   const user = await currentUser();
 
   const isUserMember = await db.workspaceMember.findUnique({
@@ -59,14 +57,13 @@ const BoardIdPage = async ({ params, userId }: BoardIdPageProps) => {
 
   return (
     <div className="bg-white">
-      <BoardNavbar board={board} />
       <main className="relative  h-full mx-auto max-w-6xl p-4">
         <div className="flex flex-col h-full">
           <div className="flex items-center gap-x-2 text-lg font-semibold mb-6">
             <div className="flex items-center gap-2">
-              <span className="text-neutral-700">Projects</span>
+              <span className="text-blue-500">Boards</span>
               <span className="text-neutral-400">/</span>
-              <span>{board?.title}</span>
+              <BoardNavbar board={board} />
             </div>
           </div>
           <div className="flex items-center gap-4 mb-6">

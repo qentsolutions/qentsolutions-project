@@ -14,7 +14,7 @@ export const BoardNavbar = ({ board }: BoardNavbarProps) => {
   return (
     <div className="flex items-center" >
       <BoardTitleForm data={board} />
-      <div className="ml-auto">
+      <div className="ml-2">
         <BoardOptions boardId={board.id} />
       </div>
     </div>

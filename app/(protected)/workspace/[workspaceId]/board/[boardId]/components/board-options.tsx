@@ -39,7 +39,7 @@ export const BoardOptions = ({ boardId }: BoardOptionsProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className="h-auto w-auto p-2" variant="default">
+        <Button className="h-auto w-auto p-2" variant="outline">
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </PopoverTrigger>

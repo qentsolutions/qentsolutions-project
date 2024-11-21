@@ -12,6 +12,7 @@ import { Description } from "./description";
 import { Actions } from "./actions";
 import { Activity } from "./activity";
 import { fetcher } from "@/lib/fetcher";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 export const CardModal = () => {
   const id = useCardModal((state) => state.id);
@@ -29,11 +30,11 @@ export const CardModal = () => {
   });
 
   return (
-    <Dialog
+    <Sheet
       open={isOpen}
       onOpenChange={onClose}
     >
-      <DialogContent>
+      <SheetContent>
         {!cardData
           ? <Header.Skeleton />
           : <Header data={cardData} />
@@ -56,7 +57,7 @@ export const CardModal = () => {
             : <Actions data={cardData} />
           }
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 };

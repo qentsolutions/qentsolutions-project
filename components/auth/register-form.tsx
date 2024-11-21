@@ -13,7 +13,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,  
+  FormMessage,
 } from "@/components/ui/form";
 import { CardWrapper } from "@/components/auth/card-wrapper"
 import { Button } from "@/components/ui/button";
@@ -38,7 +38,7 @@ export const RegisterForm = () => {
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     setError("");
     setSuccess("");
-    
+
     startTransition(() => {
       register(values)
         .then((data) => {
@@ -56,7 +56,7 @@ export const RegisterForm = () => {
       showSocial
     >
       <Form {...form}>
-        <form 
+        <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6"
         >
@@ -117,6 +117,7 @@ export const RegisterForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
+          <p className="text-xs">By signing up, you agree to our <a href="/terms-of-use" className="text-blue-500">Terms of Use</a> and <a href="/privacy-policy" className="text-blue-500">Privacy Policy</a></p>
           <Button
             disabled={isPending}
             type="submit"

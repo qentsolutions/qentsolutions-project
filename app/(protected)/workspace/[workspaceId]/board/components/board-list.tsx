@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Rocket, Search, Plus, Clock } from 'lucide-react';
+import { Search, Plus, Clock } from 'lucide-react';
 import { FormPopover } from "@/components/form/form-popover";
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,9 @@ export const BoardList = () => {
         });
         if (!response.ok) throw new Error("Failed to fetch boards");
         const data = await response.json();
-        setBoards(data);
+        const sortedBoards = data.sort((a: Board, b: Board) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+        setBoards(sortedBoards);
+      
       } catch (error) {
         console.error("Error fetching boards:", error);
       } finally {

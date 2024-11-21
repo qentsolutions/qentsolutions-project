@@ -14,7 +14,7 @@ export async function GET(
     if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-
+    
     const auditLogs = await db.auditLog.findMany({
       where: {
         workspaceId: params.workspaceId,  // Utilisation de workspaceId dans les paramètres

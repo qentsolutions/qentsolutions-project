@@ -28,7 +28,7 @@ export const CardItem = ({ data, index }: CardItemProps) => {
           className="truncate border bg-white rounded-lg shadow-sm hover:border-black"
         >
           <div className="p-3 space-y-3">
-            <CardModal />
+            {cardModal.isOpen && <CardModal />}
             <div className="flex items-start gap-x-2">
               <Badge variant="secondary" className="bg-red-100 text-red-700">High</Badge>
               <Badge variant="secondary" className="bg-blue-100 text-blue-700">Marketing</Badge>
@@ -38,8 +38,8 @@ export const CardItem = ({ data, index }: CardItemProps) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-x-1 text-muted-foreground text-xs">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <polyline points="12 6 12 12 16 14"/>
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
                 </svg>
                 {format(new Date(data.createdAt), "MMM d")}
               </div>
