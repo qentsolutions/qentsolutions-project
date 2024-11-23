@@ -1,10 +1,10 @@
 import { useRouter } from "next/navigation" // Import de useRouter
 import {
-    BadgeCheck,
     Bell,
     ChevronsUpDown,
     CreditCard,
     LogOut,
+    Settings,
     Sparkles,
 } from "lucide-react"
 
@@ -89,9 +89,9 @@ export function NavUser({
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => handleNavigation('/account')}>
-                                <BadgeCheck />
-                                Account
+                            <DropdownMenuItem onClick={() => handleNavigation('/settings/profile')}>
+                                <Settings />
+                                Settings
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleNavigation('/billing')}>
                                 <CreditCard />

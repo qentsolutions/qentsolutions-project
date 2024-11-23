@@ -1,20 +1,20 @@
-import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
+    import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
 
 
-const WorkspaceIdPage = () => {
+    const WorkspaceIdPage = () => {
 
-    const { currentWorkspace } = useCurrentWorkspace();
-    
-    const workspaceLogo = currentWorkspace?.logo
-    const workspaceName = currentWorkspace?.name
-    const workspaceMembers = currentWorkspace?.members
-    
+        const { currentWorkspace } = useCurrentWorkspace();
+        
+        const workspaceLogo = currentWorkspace?.logo
+        const workspaceName = currentWorkspace?.name
+        const workspaceMembers = currentWorkspace?.members
+        
 
-    return (
-        <div>
-            <h1>WorkspaceId</h1>
-        </div>
-    );
-}
+        return (
+            <div>
+                <h1>WorkspaceId</h1>
+            </div>
+        );
+    }
 
-export default WorkspaceIdPage;
+    export default WorkspaceIdPage;

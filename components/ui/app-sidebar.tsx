@@ -63,7 +63,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
     navMain: [
       {
-        title: "Dashboard",
+        title: "Projects",
         url: "#",
         icon: SquareTerminal,
         isActive: true,

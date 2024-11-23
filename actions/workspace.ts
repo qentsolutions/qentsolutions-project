@@ -99,8 +99,15 @@ export const createWorkspace = async (
 
     return { workspaceId: workspace.id };
   } catch (error) {
+    const isProduction = process.env.NODE_ENV === "production";
+
     return {
-      error: error instanceof Error ? error.message : "Something went wrong!",
+      error:
+        error instanceof Error
+          ? !isProduction
+            ? "An unexpected error occurred. Please try again later."
+            : error.message
+          : "Something went wrong!",
     };
   }
 };
@@ -148,6 +155,15 @@ export const getUserWorkspaces = async () => {
       })),
     };
   } catch (error) {
-    return { error: "Something went wrong!" };
+    const isProduction = process.env.NODE_ENV === "production";
+
+    return {
+      error:
+        error instanceof Error
+          ? !isProduction
+            ? "An unexpected error occurred. Please try again later."
+            : error.message
+          : "Something went wrong!",
+    };
   }
 };

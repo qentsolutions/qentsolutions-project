@@ -36,10 +36,10 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { UserRole } from "@prisma/client";
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
-import { currentUser } from "@/lib/auth";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 const SettingsPage = () => {
-  const user = currentUser();
+  const user =useCurrentUser();
 
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
