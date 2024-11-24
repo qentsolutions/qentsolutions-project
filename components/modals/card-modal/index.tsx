@@ -13,7 +13,7 @@ import { Activity } from "./activity";
 import { Comments } from "./comments"; // Nouveau composant
 import { fetcher } from "@/lib/fetcher";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { ActivityIcon } from "lucide-react";
+import { ActivityIcon, Logs, MessageSquareText } from "lucide-react";
 import { Tabs, TabsTrigger, TabsContent, TabsList } from "@/components/ui/tabs";
 
 export const CardModal = () => {
@@ -21,19 +21,16 @@ export const CardModal = () => {
   const isOpen = useCardModal((state) => state.isOpen);
   const onClose = useCardModal((state) => state.onClose);
 
-  // Récupère les données de la carte
   const { data: cardData } = useQuery<CardWithList>({
     queryKey: ["card", id],
     queryFn: () => fetcher(`/api/cards/${id}`),
   });
 
-  // Récupère les commentaires de la carte
   const { data: commentsData } = useQuery<Comment[]>({
     queryKey: ["card-comments", id],
     queryFn: () => fetcher(`/api/cards/${id}/comments`),
   });
 
-  // Récupère les logs d'audit de la carte
   const { data: auditLogsData } = useQuery<AuditLog[]>({
     queryKey: ["card-logs", id],
     queryFn: () => fetcher(`/api/cards/${id}/logs`),
@@ -41,7 +38,7 @@ export const CardModal = () => {
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className=" overflow-y-auto"> {/* Ajout de la hauteur et du défilement */}
+      <SheetContent className=" overflow-y-auto">
         {!cardData ? (
           <Header.Skeleton />
         ) : (
@@ -59,10 +56,10 @@ export const CardModal = () => {
               <Tabs defaultValue="comments">
                 <TabsList>
                   <TabsTrigger value="comments">
-                    Comments
+                    <MessageSquareText size={12} className="mr-1" /> Comments
                   </TabsTrigger>
                   <TabsTrigger value="logs">
-                    Logs
+                    <Logs size={12} className="mr-1" /> Logs
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="comments">

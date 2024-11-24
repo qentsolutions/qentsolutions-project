@@ -6,7 +6,6 @@ import { useCardModal } from "@/hooks/use-card-modal";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
-import { CardModal } from "@/components/modals/card-modal";
 
 interface CardItemProps {
   data: Card;
@@ -43,7 +42,6 @@ export const CardItem = ({ data, index }: CardItemProps) => {
                 {format(new Date(data.createdAt), "MMM d")}
               </div>
               <Avatar className="h-6 w-6">
-                <AvatarImage src="/placeholder-avatar.jpg" />
               </Avatar>
             </div>
           </div>

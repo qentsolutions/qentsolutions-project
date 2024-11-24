@@ -57,8 +57,8 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
   }
 
   return (
-    <div className="bg-white">
-      <main className="relative  h-full mx-auto max-w-6xl p-4">
+    <div className="bg-white mt-8">
+      <main className="relative  h-full mx-auto p-8">
         <div className="flex flex-col h-full">
           <div className="flex items-center gap-x-2 text-lg font-semibold mb-6">
             <div className="flex items-center gap-2">
@@ -102,7 +102,6 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
           </div>
           <div className="overflow-x-auto">
             <ListContainer boardId={board?.id} data={board.lists} />
-
           </div>
         </div>
       </main>

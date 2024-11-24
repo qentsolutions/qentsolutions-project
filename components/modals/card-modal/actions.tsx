@@ -12,6 +12,7 @@ import { deleteCard } from "@/actions/tasks/delete-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCardModal } from "@/hooks/use-card-modal";
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface ActionsProps {
   data: CardWithList;
@@ -93,16 +94,48 @@ export const Actions = ({
         <Copy className="h-4 w-4 mr-2" />
         Copy
       </Button>
-      <Button
-        onClick={onDelete}
-        disabled={isLoadingDelete}
-        variant="outline"
-        className="w-full justify-start"
-        size="default"
-      >
-        <Trash className="h-4 w-4 mr-2" />
-        Delete
-      </Button>
+      <Dialog>
+        <DialogTrigger className="w-full">
+          <Button
+            variant="outline"
+            className="w-full justify-start"
+            size="default"
+          >
+            <Trash className="h-4 w-4 mr-2" />
+            Delete
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <p className="text-base text-muted-foreground mb-4">
+            Are you sure you want to delete this card? This action is irreversible.
+          </p>
+          <div className="flex items-center">
+            <Button
+              onClick={(e) => {
+                e.stopPropagation(); 
+                onDelete();
+              }}
+              disabled={isLoadingDelete}
+              variant="destructive"
+              className="w-full justify-center mr-8"
+              size="default"
+            >
+              <Trash className="h-4 w-4 mr-1" />
+              Delete
+            </Button>
+            <DialogClose className="w-full">
+              <Button
+                variant="outline"
+                className="w-full justify-center cursor-pointer"
+                size="default"
+              >
+                Cancel
+              </Button>
+            </DialogClose>
+          
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

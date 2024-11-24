@@ -99,14 +99,14 @@ export const Description = ({
           >
             <FormTextarea
               id="description"
-              className="w-full mt-2"
+              className="w-full mt-2 h-[200px]"
               placeholder="Add a more detailed description"
               defaultValue={data.description || undefined}
               errors={fieldErrors}
               ref={textareaRef}
             />
             <div className="flex items-center gap-x-2">
-              <FormSubmit>
+              <FormSubmit className="bg-blue-500 text-white hover:bg-blue-700 hover:text-white">
                 Save
               </FormSubmit>
               <Button

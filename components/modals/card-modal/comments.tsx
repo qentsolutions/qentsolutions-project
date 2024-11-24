@@ -121,25 +121,31 @@ const CommentForm = ({
               className="pb-20 mt-2 pt-2 pl-2 rounded-lg bg-gray-50"
               errors={fieldErrors}
             />
-            <div className="flex space-x-2 mt-2">
-              <Button type="submit" disabled={isSubmitting} size="sm" className="bg-blue-500">
-                {isSubmitting ? "Adding..." : "Add Comment"}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setIsEditing(false);
-                  setNewComment("");
-                }}
-              >
-                Cancel
-              </Button>
-            </div>
           </div>
         )}
       </div>
+      {!isEditing ? (
+        ""
+      ) : (
+        <div className="flex space-x-2 mt-2">
+          <Button type="submit" disabled={isSubmitting} size="sm" className="bg-blue-500 hover:bg-blue-700">
+            {isSubmitting ? "Adding..." : "Add Comment"}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setNewComment("");
+              setIsEditing(false);
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      )}
+
+
     </form>
   </div>
 );
