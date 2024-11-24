@@ -24,6 +24,7 @@ enum ENTITY_TYPE {
   CARD
 }
 
+
 model User {
   id                    String                 @id @default(cuid())
   name                  String?
@@ -65,6 +66,9 @@ model WorkspaceMember {
 
   @@unique([workspaceId, userId])
 }
+
+
+
 
 model Board {
   id          String @id @default(uuid())

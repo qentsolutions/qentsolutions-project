@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown, Plus, } from "lucide-react"
+import { Bolt, ChevronsUpDown, Cog, Plus, Settings, } from "lucide-react"
 
 import {
     DropdownMenu,
@@ -90,32 +90,44 @@ export function TeamSwitcher({
                         </DropdownMenuLabel>
 
                         {workspaces.map((workspace) => (
-                            <DropdownMenuItem
-                                key={workspace.id}
-                                onClick={() => handleWorkspaceSelect(workspace)}
-                                className={`${currentWorkspace?.id === workspace.id ? "bg-blue-50 text-black" : "text-muted-foreground"
-                                    }`}  // Condition pour appliquer le fond bleu si c'est le workspace sélectionné
-                            >
-                                {workspace.logo ? (
-                                    <div className="w-6 h-6 bg-gray-100 flex items-center justify-center rounded">
-                                        <Image
-                                            src={workspace.logo}
-                                            alt={workspace.name}
-                                            width={24}
-                                            height={24}
-                                            className="object-cover rounded"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className="w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded">
-                                        <span className="font-semibold">
-                                            {workspace.name?.charAt(0).toUpperCase()}
-                                        </span>
-                                    </div>
+                            <div className="flex items-center w-full">
+                                <DropdownMenuItem
+                                    key={workspace.id}
+                                    onClick={() => handleWorkspaceSelect(workspace)}
+                                    className={`${currentWorkspace?.id === workspace.id ? "bg-blue-50 text-black w-full" : "text-muted-foreground w-full"
+                                        }`}  // Condition pour appliquer le fond bleu si c'est le workspace sélectionné
+                                >
+                                    {workspace.logo ? (
+                                        <div className="w-6 h-6 bg-gray-100 flex items-center justify-center rounded">
+                                            <Image
+                                                src={workspace.logo}
+                                                alt={workspace.name}
+                                                width={24}
+                                                height={24}
+                                                className="object-cover rounded"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded">
+                                            <span className="font-semibold">
+                                                {workspace.name?.charAt(0).toUpperCase()}
+                                            </span>
+                                        </div>
+                                    )}
+                                    <span>{currentWorkspace?.name}</span>
+
+                                </DropdownMenuItem>
+                                {currentWorkspace?.id === workspace.id && (
+                                    <Link href={`/workspace/${workspace.id}/settings`}>
+                                        <p className="flex items-center justify-center w-6 h-6 rounded-ful text-gray-800">
+                                            <Settings size={14} className="ml-1" />
+                                        </p>
+                                    </Link>
                                 )}
-                                <span>{currentWorkspace?.name}</span>
-                            </DropdownMenuItem>
+                            </div>
+
                         ))}
+
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="gap-2 p-2" onClick={handleNewWorkspace}>
                             <div className="flex size-6 items-center justify-center rounded-md border bg-background">
