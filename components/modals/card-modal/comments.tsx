@@ -14,6 +14,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TrashIcon } from "lucide-react";
 
 type CommentsProps = {
   items: Comment[];
@@ -223,7 +224,7 @@ const CommentList = ({ comments, onDelete, user }: { comments: Comment[]; onDele
       <ul className="space-y-8">
         {comments.map((comment) => (
           <li key={comment.id}>
-            <div className="flex items-start space-x-4">
+            <div className="group flex items-start space-x-4"> 
               <Avatar>
                 <AvatarImage src={comment.user?.image || ""} alt={comment.user?.name || "undefined"} />
                 <AvatarFallback>{comment.user?.name?.[0] ?? "?"}</AvatarFallback>
@@ -236,18 +237,30 @@ const CommentList = ({ comments, onDelete, user }: { comments: Comment[]; onDele
                   </span>
                 </div>
                 <p className="text-sm text-foreground">{comment.text}</p>
+                <div className="flex items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  {user?.id === comment.user.id && (
+                    <Button
+                      variant="ghost"
+                      onClick={() => { }}
+                      className="text-red-500"
+                    >
+                      <p className="text-neutral-600 text-xs">Edit</p>
+                    </Button>
+                  )}
+                  {user?.id === comment.user.id && (
+                    <Button
+                      variant="ghost"
+                      onClick={() => onDelete(comment.id)}
+                      className="text-red-500 hover:bg-red-50"
+                    >
+                      <p className="text-neutral-600 text-xs">Delete</p>
+                    </Button>
+                  )}
+                </div>
               </div>
-              {user?.id === comment.user.id && (
-                <Button
-                  variant="ghost"
-                  onClick={() => onDelete(comment.id)}
-                  className="text-red-500 hover:bg-red-50"
-                >
-                  Delete
-                </Button>
-              )}
             </div>
           </li>
+
         ))}
       </ul>
     )}
