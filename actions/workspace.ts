@@ -141,6 +141,7 @@ export const getUserWorkspaces = async () => {
                 id: true,
                 name: true,
                 email: true,
+                image: true,
               },
             },
           },

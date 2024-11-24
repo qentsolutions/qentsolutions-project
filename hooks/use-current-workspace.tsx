@@ -3,21 +3,26 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getUserWorkspaces } from "@/actions/workspace";
+import { UserRole } from "@prisma/client";
+
+interface User {
+  name: string | null;
+  id: string;
+  email: string | null;
+  image: string | null; // Modifier de `string | undefined` à `string | null`
+}
+
+interface Member {
+  user: User;
+  role: UserRole;
+}
 
 interface Workspace {
   id: string;
   name: string;
-  createdAt: string;
   logo: string | null;
-  members: {
-    role: string;
-    user: {
-      image: string | undefined;
-      id: string;
-      name: string | null;
-      email: string | null;
-    };
-  }[];
+  createdAt: string;
+  members: Member[];
 }
 
 interface WorkspaceContextType {
@@ -42,7 +47,6 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
         if (loadedWorkspaces && !error) {
           setWorkspaces(loadedWorkspaces);
 
-          // Set current workspace based on URL param or first workspace
           const workspaceId = params?.workspaceId as string;
           const currentWs = loadedWorkspaces.find(w => w.id === workspaceId) || loadedWorkspaces[0];
           setCurrentWorkspace(currentWs || null);

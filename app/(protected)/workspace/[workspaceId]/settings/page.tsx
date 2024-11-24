@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { PlusCircle, Settings, Users } from "lucide-react";
+import { CreditCard, PlusCircle, Settings, Users } from "lucide-react";
 
 const UpdateWorkspaceSchema = z.object({
     name: z.string().min(1, "Workspace name is required"),
@@ -89,6 +89,10 @@ const ManageWorkspacesPage = () => {
                                 <Users className="mr-2 h-4 w-4" />
                                 Members
                             </TabsTrigger>
+                            <TabsTrigger value="billing">
+                                <CreditCard className="mr-2 h-4 w-4" />
+                                Billing
+                            </TabsTrigger>
                             <TabsTrigger value="settings">
                                 <Settings className="mr-2 h-4 w-4" />
                                 Settings
@@ -104,7 +108,7 @@ const ManageWorkspacesPage = () => {
                                         Manage and invite members to your workspace
                                     </p>
                                 </div>
-                                <Button>
+                                <Button className="bg-blue-500 hover:bg-blue-700">
                                     <PlusCircle className="mr-2 h-4 w-4" />
                                     Invite Member
                                 </Button>
@@ -132,7 +136,7 @@ const ManageWorkspacesPage = () => {
                                         <CardContent className="flex items-center justify-between p-4">
                                             <div className="flex items-center space-x-4">
                                                 <Avatar>
-                                                    <AvatarImage src={member.user.image} />
+                                                    <AvatarImage src={member.user.image || ""} />
                                                     <AvatarFallback>{member.user.name ? member.user.name[0] : ''}</AvatarFallback>
                                                 </Avatar>
                                                 <div>
@@ -140,13 +144,21 @@ const ManageWorkspacesPage = () => {
                                                     <p className="text-sm text-muted-foreground">{member.user.email}</p>
                                                 </div>
                                             </div>
-                                            <Badge variant={member.role === "OWNER" ? "default" : "secondary"}>
+                                            <Badge variant={member.role === "ADMIN" ? "default" : "secondary"}>
                                                 {member.role}
                                             </Badge>
                                         </CardContent>
                                     </Card>
                                 ))}
                             </div>
+                        </TabsContent>
+                        <TabsContent value="billing" className="space-y-4">
+                            <h2 className="text-xl font-semibold tracking-tight">
+                                Billing Information
+                            </h2>
+                            <p className="text-sm text-muted-foreground">
+                                Manage your billing information and subscription
+                            </p>
                         </TabsContent>
                         <TabsContent value="settings" className="space-y-4">
                             <Form {...form}>

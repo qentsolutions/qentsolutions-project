@@ -4,6 +4,7 @@ import { ListContainer } from "./components/list-container";
 import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface BoardIdPageProps {
   params: {
@@ -84,24 +85,25 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
             </div>
           </div>
           <div className="flex items-center gap-4 mb-6">
-            <nav className="flex gap-4 text-sm">
-              <a href="#" className="text-neutral-400">Overview</a>
-              <a href="#" className="text-neutral-400">List</a>
-              <a href="#" className="text-blue-600 border-b-2 border-blue-600 pb-1">Board</a>
-              <a href="#" className="text-neutral-400">Timeline</a>
-              <a href="#" className="text-neutral-400">Calendar</a>
-              <a href="#" className="text-neutral-400">Review</a>
-            </nav>
-            <div className="ml-auto">
-              <input
-                type="search"
-                placeholder="Search for a card ID"
-                className="px-4 py-2 text-sm border rounded-md w-64"
-              />
-            </div>
-          </div>
-          <div className="overflow-x-auto">
-            <ListContainer boardId={board?.id} data={board.lists} />
+            <Tabs defaultValue="board">
+              <TabsList>
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="list">List</TabsTrigger>
+                <TabsTrigger value="board">Board</TabsTrigger>
+                <TabsTrigger value="timeline">Timeline</TabsTrigger>
+                <TabsTrigger value="calendar">Calendar</TabsTrigger>
+                <TabsTrigger value="review">Review</TabsTrigger>
+              </TabsList>
+              <div className="mt-8"></div>
+              <TabsContent value="overview">Overview</TabsContent>
+              <TabsContent value="list">List</TabsContent>
+              <TabsContent value="board">
+                <div className="overflow-x-auto">
+                  <ListContainer boardId={board?.id} data={board.lists} />
+                </div>
+              </TabsContent>
+              <TabsContent value="timeline">Timeline</TabsContent>
+            </Tabs>
           </div>
         </div>
       </main>

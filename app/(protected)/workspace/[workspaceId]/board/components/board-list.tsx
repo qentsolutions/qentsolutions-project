@@ -59,7 +59,7 @@ export const BoardList = () => {
     <div className="container mx-auto px-4 py-8">
       <Card className="bg-white shadow-sm rounded-md">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-2xl font-bold">Your Boards</CardTitle>
+          <CardTitle className="text-2xl font-bold">Boards</CardTitle>
           {workspaceId && (
             <FormPopover sideOffset={10} side="right" workspaceId={String(workspaceId)}>
               <Button variant="outline">
@@ -97,7 +97,7 @@ export const BoardList = () => {
                             ? new Date(board.updatedAt).toLocaleTimeString([], {
                               hour: '2-digit',
                               minute: '2-digit',
-                              hour12: true, // Cette option permet d'afficher AM/PM
+                              hour12: true, 
                             })
                             : new Date(board.updatedAt).toLocaleDateString('en-US')}
                         </p>
