@@ -43,6 +43,12 @@ export const ListItem = ({ data, index }: ListItemProps) => {
             className="w-full rounded-xl bg-[#f1f2f4] shadow-sm"
           >
             <ListHeader onAddCard={enableEditing} data={data} />
+            <CardForm
+              listId={data.id}
+              isEditing={isEditing}
+              enableEditing={enableEditing}
+              disableEditing={disableEditing}
+            />
             <Droppable droppableId={data.id} type="card">
               {(provided) => (
                 <ol
@@ -60,12 +66,6 @@ export const ListItem = ({ data, index }: ListItemProps) => {
                 </ol>
               )}
             </Droppable>
-            <CardForm
-              listId={data.id}
-              isEditing={isEditing}
-              enableEditing={enableEditing}
-              disableEditing={disableEditing}
-            />
           </div>
         </li>
       )}

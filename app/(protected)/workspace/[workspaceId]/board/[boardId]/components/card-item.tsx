@@ -28,7 +28,6 @@ export const CardItem = ({ data, index }: CardItemProps) => {
           className="truncate border bg-white rounded-lg shadow-sm hover:border-black"
         >
           <div className="p-3 space-y-3">
-            {cardModal.isOpen && <CardModal />}
             <div className="flex items-start gap-x-2">
               <Badge variant="secondary" className="bg-red-100 text-red-700">High</Badge>
               <Badge variant="secondary" className="bg-blue-100 text-blue-700">Marketing</Badge>

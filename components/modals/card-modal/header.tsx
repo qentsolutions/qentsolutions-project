@@ -35,6 +35,10 @@ export const Header = ({
         queryKey: ["card-logs", data.id]
       });
 
+      queryClient.invalidateQueries({
+        queryKey: ["card-comments", data.id]
+      });
+
       toast.success(`Renamed to "${data.title}"`);
       setTitle(data.title);
     },
@@ -75,7 +79,7 @@ export const Header = ({
     <div className="flex items-start gap-x-3 mb-6 w-full">
       <Layout className="h-5 w-5 mt-1 text-neutral-700" />
       <div className="w-full">
-        <form action={onSubmit}>
+        <form action={onSubmit} className="text-2xl">
           <FormInput
             ref={inputRef}
             onBlur={onBlur}

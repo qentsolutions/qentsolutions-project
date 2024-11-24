@@ -12,6 +12,7 @@ interface Workspace {
   members: {
     role: string;
     user: {
+      image: string | undefined;
       id: string;
       name: string | null;
       email: string | null;

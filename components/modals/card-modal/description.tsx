@@ -15,6 +15,7 @@ import { FormTextarea } from "@/components/form/form-textarea";
 import { FormSubmit } from "@/components/form/form-submit";
 import { Button } from "@/components/ui/button";
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
+import { TextAlignLeftIcon } from "@radix-ui/react-icons";
 
 interface DescriptionProps {
   data: CardWithList;
@@ -86,11 +87,10 @@ export const Description = ({
 
   return (
     <div className="flex items-start gap-x-3 w-full">
-      <AlignLeft className="h-5 w-5 mt-0.5 text-neutral-700" />
       <div className="w-full">
-        <p className="font-semibold text-neutral-700 mb-2">
-          Description
-        </p>
+        <span className="flex items-center font-bold text-lg  mb-6">
+          <TextAlignLeftIcon className="mr-2" /> Description
+        </span>
         {isEditing ? (
           <form
             action={onSubmit}
@@ -123,7 +123,7 @@ export const Description = ({
           <div
             onClick={enableEditing}
             role="button"
-            className="min-h-[78px] bg-neutral-200 text-sm font-medium py-3 px-3.5 rounded-md"
+            className="min-h-[200px] border text-sm font-medium py-3 px-3.5 rounded-md"
           >
             {data.description || "Add a more detailed description..."}
           </div>

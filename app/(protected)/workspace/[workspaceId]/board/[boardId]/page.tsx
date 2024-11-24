@@ -3,6 +3,7 @@ import { BoardNavbar } from "./components/board-navbar";
 import { ListContainer } from "./components/list-container";
 import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 interface BoardIdPageProps {
   params: {
@@ -61,7 +62,9 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
         <div className="flex flex-col h-full">
           <div className="flex items-center gap-x-2 text-lg font-semibold mb-6">
             <div className="flex items-center gap-2">
-              <span className="text-blue-500">Boards</span>
+              <Link href={`/workspace/${params.workspaceId}/board`}>
+                <span className="text-blue-500">Boards</span>
+              </Link>
               <span className="text-neutral-400">/</span>
               <BoardNavbar board={board} />
             </div>

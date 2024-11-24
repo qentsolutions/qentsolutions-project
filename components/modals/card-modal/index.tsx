@@ -2,60 +2,91 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { CardWithList } from "@/types";
+import { CardWithList, Comment } from "@/types";
 import { AuditLog } from "@prisma/client";
 import { useCardModal } from "@/hooks/use-card-modal";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { Header } from "./header";
 import { Description } from "./description";
 import { Actions } from "./actions";
 import { Activity } from "./activity";
+import { Comments } from "./comments"; // Nouveau composant
 import { fetcher } from "@/lib/fetcher";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { ActivityIcon } from "lucide-react";
+import { Tabs, TabsTrigger, TabsContent, TabsList } from "@/components/ui/tabs";
 
 export const CardModal = () => {
   const id = useCardModal((state) => state.id);
   const isOpen = useCardModal((state) => state.isOpen);
   const onClose = useCardModal((state) => state.onClose);
 
+  // Récupère les données de la carte
   const { data: cardData } = useQuery<CardWithList>({
     queryKey: ["card", id],
     queryFn: () => fetcher(`/api/cards/${id}`),
   });
 
+  // Récupère les commentaires de la carte
+  const { data: commentsData } = useQuery<Comment[]>({
+    queryKey: ["card-comments", id],
+    queryFn: () => fetcher(`/api/cards/${id}/comments`),
+  });
+
+  // Récupère les logs d'audit de la carte
   const { data: auditLogsData } = useQuery<AuditLog[]>({
     queryKey: ["card-logs", id],
     queryFn: () => fetcher(`/api/cards/${id}/logs`),
   });
 
   return (
-    <Sheet
-      open={isOpen}
-      onOpenChange={onClose}
-    >
-      <SheetContent>
-        {!cardData
-          ? <Header.Skeleton />
-          : <Header data={cardData} />
-        }
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent className=" overflow-y-auto"> {/* Ajout de la hauteur et du défilement */}
+        {!cardData ? (
+          <Header.Skeleton />
+        ) : (
+          <Header data={cardData} />
+        )}
         <div className="grid grid-cols-1 md:grid-cols-4 md:gap-4">
           <div className="col-span-3">
             <div className="w-full space-y-6">
-              {!cardData
-                ? <Description.Skeleton />
-                : <Description data={cardData} />
-              }
-              {!auditLogsData
-                ? <Activity.Skeleton />
-                : <Activity items={auditLogsData} />
-              }
+              {!cardData ? (
+                <Description.Skeleton />
+              ) : (
+                <Description data={cardData} />
+              )}
+              <span className="font-bold text-lg  flex items-center"><ActivityIcon size={12} className="mr-2" /> Activity</span>
+              <Tabs defaultValue="comments">
+                <TabsList>
+                  <TabsTrigger value="comments">
+                    Comments
+                  </TabsTrigger>
+                  <TabsTrigger value="logs">
+                    Logs
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="comments">
+                  {!commentsData ? (
+                    <div>Loading comments...</div>
+                  ) : (
+                    <Comments items={commentsData} cardId={cardData?.id ?? ''} />
+                  )}
+                </TabsContent>
+                <TabsContent value="logs">
+                  {!auditLogsData ? (
+                    <Activity.Skeleton />
+                  ) : (
+                    <Activity items={auditLogsData} />
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
-          {!cardData
-            ? <Actions.Skeleton />
-            : <Actions data={cardData} />
-          }
+          {!cardData ? (
+            <Actions.Skeleton />
+          ) : (
+            <Actions data={cardData} />
+          )}
         </div>
       </SheetContent>
     </Sheet>

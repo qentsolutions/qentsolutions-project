@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown, Plus } from "lucide-react"
+import { ChevronsUpDown, Plus, } from "lucide-react"
 
 import {
     DropdownMenu,
@@ -9,7 +9,6 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -21,6 +20,7 @@ import {
 import { useRouter } from "next/navigation"
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace"
 import Image from "next/image"
+import Link from "next/link"
 
 export function TeamSwitcher({
     teams,
@@ -113,10 +113,9 @@ export function TeamSwitcher({
                                         </span>
                                     </div>
                                 )}
-                                <span>{workspace.name}</span>
+                                <span>{currentWorkspace?.name}</span>
                             </DropdownMenuItem>
                         ))}
-
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="gap-2 p-2" onClick={handleNewWorkspace}>
                             <div className="flex size-6 items-center justify-center rounded-md border bg-background">
@@ -127,6 +126,6 @@ export function TeamSwitcher({
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarMenuItem>
-        </SidebarMenu>
+        </SidebarMenu >
     )
 }

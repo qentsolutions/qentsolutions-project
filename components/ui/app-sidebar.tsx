@@ -28,6 +28,7 @@ import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace"
+import Link from "next/link"
 
 // This is sample data.
 
@@ -35,7 +36,7 @@ import { useCurrentWorkspace } from "@/hooks/use-current-workspace"
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const user = useCurrentUser();
-  const { currentWorkspace } = useCurrentWorkspace();
+  const { currentWorkspace } = useCurrentWorkspace();
   const workspaceId = currentWorkspace?.id;
 
   const data = {

@@ -5,6 +5,8 @@ import { auth } from '@/auth'
 import './globals.css'
 import { Toaster } from "@/components/ui/sonner";
 import { WorkspaceProvider } from '@/hooks/use-current-workspace';
+import { ModalProvider } from '@/providers/modal-provider'
+import { QueryProvider } from '@/providers/query-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,12 +25,15 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <WorkspaceProvider>
-        <html lang="en">
+        <QueryProvider>
+            <html lang="en">
           <body className={inter.className}>
             <Toaster />
+            <ModalProvider />
             {children}
           </body>
         </html>
+        </QueryProvider>
       </WorkspaceProvider>
     </SessionProvider>
   )

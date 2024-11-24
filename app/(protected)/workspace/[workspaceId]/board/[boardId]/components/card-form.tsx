@@ -77,10 +77,11 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
             onKeyDown={onTextareaKeyDown}
             ref={textareaRef as React.RefObject<HTMLTextAreaElement>}
             placeholder="Enter a title for this card..."
+            className="bg-white"
             errors={fieldErrors}
           />
           <input hidden id="listId" name="listId" value={listId} />
-          <div className="flex items-center gap-x-1">
+          <div className="flex items-center gap-x-1 pb-2">
             <FormSubmit>Add card</FormSubmit>
             <Button onClick={disableEditing} size="sm" variant="ghost">
               <X className="h-5 w-5" />
@@ -91,14 +92,14 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
     }
 
     return (
-      <div className="pt-2 px-2 pb-4">
+      <div className=" px-2 border-2 border-dashed mx-2 border-gray-300 hover:bg-white">
         <Button
           onClick={enableEditing}
-          className="h-auto px-2 py-1.5 w-full justify-start text-muted-foreground text-sm"
+          className="h-auto px-2 py-1.5 w-full justify-center hover:bg-white text-muted-foreground text-sm"
           size="sm"
           variant="ghost"
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4  border-2 border-gray-300 border-dashed rounded-full" />
           Add a card
         </Button>
       </div>

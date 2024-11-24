@@ -39,6 +39,7 @@ model User {
   createdWorkspaces     Workspace[]            @relation("CreatedBy")
   boards                Board[]
   auditLogs             AuditLog[]
+  Comment               Comment[]
 }
 
 model Workspace {
@@ -66,10 +67,10 @@ model WorkspaceMember {
 }
 
 model Board {
-  id            String @id @default(uuid())
-  workspaceId   String
-  title         String
-  lists         List[]
+  id          String @id @default(uuid())
+  workspaceId String
+  title       String
+  lists       List[]
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
@@ -103,10 +104,24 @@ model Card {
   listId String
   list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  comments  Comment[]
 
   @@index([listId])
+}
+
+model Comment {
+  id     String @id @default(uuid())
+  text   String @db.Text
+  cardId String
+  userId String
+
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AuditLog {
