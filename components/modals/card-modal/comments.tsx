@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FormTextarea } from "@/components/form/form-textarea";
 import { useAction } from "@/hooks/use-action";
 import { createComment } from "@/actions/tasks/create-card-comment";
+import { deleteComment } from "@/actions/tasks/delete-card-comment"; // Import de l'action serveur
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -28,11 +29,16 @@ export const Comments = ({ items, cardId }: CommentsProps) => {
   const params = useParams();
   const user = useCurrentUser();
 
-  const { execute, fieldErrors } = useAction(createComment, {
+  if (!user) {
+    toast.error("User not found or not authenticated.");
+    return null;  // Or handle the absence of the user differently
+  }
+
+  const { execute: executeCreateComment, fieldErrors } = useAction(createComment, {
     onSuccess: (newComment) => {
       toast.success("Comment added!");
       setComments((prevComments) => [
-        { ...newComment, user: { name: user?.name ?? "", image: user?.image ?? "" }, createdAt: newComment.createdAt.toString() },
+        { ...newComment, user: { id: user?.id ?? "", name: user?.name ?? "", image: user?.image ?? "" }, createdAt: newComment.createdAt.toString() },
         ...prevComments,
       ]);
       setNewComment("");
@@ -40,6 +46,22 @@ export const Comments = ({ items, cardId }: CommentsProps) => {
     },
     onError: (error) => toast.error(error),
   });
+
+  const { execute: executeDeleteComment } = useAction(deleteComment, {
+    onSuccess: (data) => {
+      const { id: commentId } = data; // Extraction de l'ID du commentaire
+      toast.success("Comment deleted!");
+      setComments((prevComments) => {
+        const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
+        console.log("Updated comments after delete:", updatedComments); // Ajoutez ceci pour vérifier l'état
+        return updatedComments;
+      });
+    },
+    onError: (error) => toast.error(error),
+  });
+
+
+
 
   const handleSubmit = async (formData: FormData) => {
     const text = formData.get("new-comment") as string;
@@ -50,14 +72,38 @@ export const Comments = ({ items, cardId }: CommentsProps) => {
 
     setIsSubmitting(true);
     try {
+      const userId = user?.id;
+      if (!userId) {
+        toast.error("User ID is required.");
+        return;
+      }
       const { workspaceId, boardId } = params as { workspaceId: string; boardId: string };
-      await execute({ text, cardId, workspaceId, boardId });
+      await executeCreateComment({ text, cardId, workspaceId, boardId, userId });
     } catch {
       toast.error("Failed to add comment.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const handleDelete = async (commentId: string) => {
+    try {
+      const { workspaceId, boardId } = params as { workspaceId: string; boardId: string };
+      const userId = user?.id;
+      if (!userId) {
+        toast.error("User ID is required.");
+        return;
+      }
+
+      const response = await executeDeleteComment({ commentId, workspaceId, boardId, userId });
+      toast.success("Comment deleted!");
+      setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
+
+    } catch (error) {
+      toast.error("Failed to delete comment.");
+    }
+  };
+
 
   const sortedComments = [...comments].sort((a, b) =>
     sortOrder === "newest"
@@ -77,7 +123,7 @@ export const Comments = ({ items, cardId }: CommentsProps) => {
         fieldErrors={fieldErrors}
       />
       <CommentSorter sortOrder={sortOrder} setSortOrder={setSortOrder} />
-      <CommentList comments={sortedComments} />
+      <CommentList comments={sortedComments} onDelete={handleDelete} user={user} />
     </div>
   );
 };
@@ -124,9 +170,7 @@ const CommentForm = ({
           </div>
         )}
       </div>
-      {!isEditing ? (
-        ""
-      ) : (
+      {isEditing && (
         <div className="flex space-x-2 mt-2">
           <Button type="submit" disabled={isSubmitting} size="sm" className="bg-blue-500 hover:bg-blue-700">
             {isSubmitting ? "Adding..." : "Add Comment"}
@@ -144,8 +188,6 @@ const CommentForm = ({
           </Button>
         </div>
       )}
-
-
     </form>
   </div>
 );
@@ -173,7 +215,7 @@ const CommentSorter = ({
   </div>
 );
 
-const CommentList = ({ comments }: { comments: Comment[] }) => (
+const CommentList = ({ comments, onDelete, user }: { comments: Comment[]; onDelete: (commentId: string) => void, user: { id: string } }) => (
   <div>
     {comments.length === 0 ? (
       <p className="text-muted-foreground">No comments yet.</p>
@@ -195,6 +237,15 @@ const CommentList = ({ comments }: { comments: Comment[] }) => (
                 </div>
                 <p className="text-sm text-foreground">{comment.text}</p>
               </div>
+              {user?.id === comment.user.id && (
+                <Button
+                  variant="ghost"
+                  onClick={() => onDelete(comment.id)}
+                  className="text-red-500 hover:bg-red-50"
+                >
+                  Delete
+                </Button>
+              )}
             </div>
           </li>
         ))}

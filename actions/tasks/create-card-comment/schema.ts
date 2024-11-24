@@ -12,4 +12,5 @@ export const CreateComment = z.object({
   cardId: z.string(),
   workspaceId: z.string(),
   boardId: z.string(),
+  userId : z.string()
 });

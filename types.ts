@@ -9,6 +9,7 @@ export type Comment = {
   text: string;
   createdAt: string;
   user: {
+    id: any;
     image: string;
     name: string;
   };
