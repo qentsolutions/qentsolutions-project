@@ -14,7 +14,7 @@ export const Activity = ({
   items,
 }: ActivityProps) => {
   return (
-    <div className="flex items-start gap-x-3 w-full">
+    <div className="flex items-start gap-x-3 w-full h-full">
       <div className="w-full">
         <ol className="mt-2 space-y-4">
           {items.map((item) => (

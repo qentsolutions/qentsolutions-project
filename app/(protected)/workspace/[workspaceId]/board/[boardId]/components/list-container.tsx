@@ -27,7 +27,7 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
 
 export const ListContainer = ({ data, boardId }: ListContainerProps) => {
   const [orderedData, setOrderedData] = useState(data);
-  const { currentWorkspace } = useCurrentWorkspace();
+  const { currentWorkspace } = useCurrentWorkspace();
 
   useEffect(() => {
     setOrderedData(data);
@@ -70,7 +70,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
         (item, index) => ({ ...item, order: index })
       );
       const workspaceId = currentWorkspace?.id;
-      if(!workspaceId) {
+      if (!workspaceId) {
         toast.error("Workspace not found");
         return;
       }

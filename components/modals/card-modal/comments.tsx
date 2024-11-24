@@ -14,7 +14,6 @@ import { formatDistanceToNow } from "date-fns";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrashIcon } from "lucide-react";
 
 type CommentsProps = {
   items: Comment[];
@@ -226,8 +225,8 @@ const CommentList = ({ comments, onDelete, user }: { comments: Comment[]; onDele
           <li key={comment.id}>
             <div className="group flex items-start space-x-4"> 
               <Avatar>
-                <AvatarImage src={comment.user?.image || ""} alt={comment.user?.name || "undefined"} />
-                <AvatarFallback>{comment.user?.name?.[0] ?? "?"}</AvatarFallback>
+                <AvatarImage src={comment.user?.image} alt={comment.user?.name || "undefined"} />
+                <AvatarFallback>{comment.user.name.charAt(0) ?? "?"}</AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">

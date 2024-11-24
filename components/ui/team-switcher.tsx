@@ -114,7 +114,7 @@ export function TeamSwitcher({
                                             </span>
                                         </div>
                                     )}
-                                    <span>{currentWorkspace?.name}</span>
+                                    <span>{workspace?.name}</span>
 
                                 </DropdownMenuItem>
                                 {currentWorkspace?.id === workspace.id && (
