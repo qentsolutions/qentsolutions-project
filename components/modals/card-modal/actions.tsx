@@ -33,6 +33,8 @@ export const Actions = ({
 
   // Gérer l'état des tags associés à la carte
   const [linkedTags, setLinkedTags] = useState<string[]>(data.tags.map(tag => tag.name));
+  const [isSelectVisible, setIsSelectVisible] = useState(false);
+
 
   const {
     execute: executeCopyCard,
@@ -253,9 +255,19 @@ export const Actions = ({
         </DialogContent>
       </Dialog>
       <div>
-        <div className="flex">
+        <div className="flex items-center justify-between">
           <p className="text-xs font-semibold mb-2">Tags</p>
-          <Plus className="h-4 w-4 ml-1 text-muted-foreground" />
+          {isSelectVisible ? (
+            <Plus
+              className="h-4 w-4 ml-1 text-muted-foreground cursor-pointer"
+              onClick={() => setIsSelectVisible(false)}
+            />
+          ) : (
+            <Plus
+              className="h-4 w-4 ml-1 text-muted-foreground cursor-pointer"
+              onClick={() => setIsSelectVisible(true)}
+            />
+          )}
         </div>
 
         <div className="space-x-2 flex">
@@ -282,28 +294,31 @@ export const Actions = ({
           })}
         </div>
 
-        <Select
-          value={selectedTag || ""}
-          onValueChange={(value) => {
-            setSelectedTag(value); // Mettre à jour le tag sélectionné
-            onAddTag(value); // Ajouter immédiatement après la sélection
-          }}
-          disabled={isLoadingAddTag}
-        >
-          <SelectTrigger className="w-full mt-2">
-            <SelectValue placeholder={linkedTags.length === 0 ? "Select a tag" : linkedTags.join(", ")} />
-          </SelectTrigger>
-          <SelectContent>
-            {availableTags.map((tag) => (
-              <SelectItem key={tag.id} value={tag.id}>
-                <div className="flex items-center">
-                  {tag.name}
-                  {linkedTags.includes(tag.name) && <Check className="ml-2 h-4 w-4 text-green-500" />}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {isSelectVisible && (
+          <Select
+            value={selectedTag || ""}
+            onValueChange={(value) => {
+              setSelectedTag(value); // Mettre à jour le tag sélectionné
+              onAddTag(value); // Ajouter immédiatement après la sélection
+            }}
+            disabled={isLoadingAddTag}
+          >
+            <SelectTrigger className="w-full mt-2">
+              <SelectValue placeholder={linkedTags.length === 0 ? "Select a tag" : linkedTags.join(", ")} />
+            </SelectTrigger>
+            <SelectContent>
+              {availableTags.map((tag) => (
+                <SelectItem key={tag.id} value={tag.id}>
+                  <div className="flex items-center">
+                    {tag.name}
+                    {linkedTags.includes(tag.name) && <Check className="ml-2 h-4 w-4 text-green-500" />}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
       </div>
     </div>
   );
