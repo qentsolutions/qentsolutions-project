@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { Copy, Trash, Check, Plus } from "lucide-react";
+import { Copy, Trash, Check, Plus, X } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -15,6 +15,7 @@ import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { addTagToCard } from "@/actions/tasks/add-tag-to-card";
 import { Badge } from "@/components/ui/badge"; // Importer le composant Badge
+import { removeTagFromCard } from "@/actions/tasks/delete-tag-from-card";
 
 interface ActionsProps {
   data: CardWithList;
@@ -83,6 +84,19 @@ export const Actions = ({
       toast.error(error);
     },
   });
+
+  const {
+    execute: executeRemoveTagFromCard, // Nouvelle action pour détacher un tag
+    isLoading: isLoadingRemoveTag,
+  } = useAction(removeTagFromCard, {
+    onSuccess: () => {
+      toast.success("Tag removed from card successfully");
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
+
 
   const onCopy = () => {
     const boardId = params.boardId as string;
@@ -162,6 +176,28 @@ export const Actions = ({
     }
   }, [selectedTag, availableTags, linkedTags]);
 
+
+  const onRemoveTag = (tagId: string) => {
+    const boardId = params.boardId as string;
+    const workspaceId = currentWorkspace?.id;
+
+    if (!workspaceId) {
+      toast.error("Workspace ID is required.");
+      return;
+    }
+
+    executeRemoveTagFromCard({
+      cardId: data.id,
+      tagId,
+      boardId,
+      workspaceId,
+    });
+
+    // Mettre à jour la liste des tags en temps réel
+    setLinkedTags((prevTags) => prevTags.filter((tag) => availableTags.find((t) => t.name === tag)?.id !== tagId));
+  };
+
+
   return (
     <div className="space-y-4 mt-2">
       <p className="text-xs font-semibold">Actions</p>
@@ -218,17 +254,29 @@ export const Actions = ({
       </Dialog>
       <div>
         <div className="flex">
-           <p className="text-xs font-semibold mb-2">Tags</p>
-           <Plus className="h-4 w-4 ml-1 text-muted-foreground" />
+          <p className="text-xs font-semibold mb-2">Tags</p>
+          <Plus className="h-4 w-4 ml-1 text-muted-foreground" />
         </div>
-       
-        <div className="space-x-2">
+
+        <div className="space-x-2 flex">
           {/* Affichage des tags associés à la carte sous forme de badges */}
-          {linkedTags.map((tag, index) => {
-            const tagId = availableTags.find(t => t.name === tag)?.id || "";
+          {linkedTags.map((tag) => {
+            const tagId = availableTags.find((t) => t.name === tag)?.id || "";
             return (
-              <Badge key={index} className={getRandomColor(tagId)}>
+              <Badge
+                key={tagId}
+                className={`relative flex cursor-pointer items-center ${getRandomColor(tagId)} group`} // Ajout de la classe 'group' pour gérer le hover
+              >
                 {tag}
+                <button
+                  className="absolute -right-2 -top-2 h-4 w-4 bg-white rounded-full flex items-center justify-center shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity duration-300" // Visibilité de la croix uniquement lors du hover
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRemoveTag(tagId);
+                  }}
+                >
+                  <X className="h-3 w-3 text-red-500" />
+                </button>
               </Badge>
             );
           })}
