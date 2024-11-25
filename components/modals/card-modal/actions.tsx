@@ -3,27 +3,32 @@
 import { toast } from "sonner";
 import { Copy, Trash } from "lucide-react";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 import { CardWithList } from "@/types";
 import { useAction } from "@/hooks/use-action";
 import { copyCard } from "@/actions/tasks/copy-card";
-import { Button } from "@/components/ui/button";
 import { deleteCard } from "@/actions/tasks/delete-card";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCardModal } from "@/hooks/use-card-modal";
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { addTagToCard } from "@/actions/tasks/add-tag-to-card";
 interface ActionsProps {
   data: CardWithList;
-};
+  availableTags: { id: string; name: string }[]; // Tags disponibles dans le board
+}
 
 export const Actions = ({
   data,
+  availableTags,
 }: ActionsProps) => {
   const params = useParams();
   const cardModal = useCardModal();
   const { currentWorkspace } = useCurrentWorkspace();
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const {
     execute: executeCopyCard,
@@ -45,6 +50,19 @@ export const Actions = ({
     onSuccess: (data) => {
       toast.success(`Card "${data.title}" deleted`);
       cardModal.onClose();
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
+
+  const {
+    execute: executeAddTagToCard,
+    isLoading: isLoadingAddTag,
+  } = useAction(addTagToCard, {
+    onSuccess: () => {
+      toast.success("Tag added to card successfully");
+      setSelectedTag(null); // Réinitialiser le select après succès
     },
     onError: (error) => {
       toast.error(error);
@@ -79,8 +97,29 @@ export const Actions = ({
     });
   };
 
+  const onAddTag = () => {
+    const boardId = params.boardId as string;
+    const workspaceId = currentWorkspace?.id;
+
+    if (!workspaceId) {
+      toast.error("Workspace ID is required.");
+      return;
+    }
+    if (!selectedTag) {
+      toast.error("Please select a tag to add.");
+      return;
+    }
+
+    executeAddTagToCard({
+      cardId: data.id,
+      tagId: selectedTag,
+      boardId,
+      workspaceId,
+    });
+  };
+
   return (
-    <div className="space-y-2 mt-2">
+    <div className="space-y-4 mt-2">
       <p className="text-xs font-semibold">
         Actions
       </p>
@@ -112,7 +151,7 @@ export const Actions = ({
           <div className="flex items-center">
             <Button
               onClick={(e) => {
-                e.stopPropagation(); 
+                e.stopPropagation();
                 onDelete();
               }}
               disabled={isLoadingDelete}
@@ -132,20 +171,49 @@ export const Actions = ({
                 Cancel
               </Button>
             </DialogClose>
-          
           </div>
         </DialogContent>
       </Dialog>
+      <div>
+        <p className="text-xs font-semibold mb-2">Add Tag</p>
+        <Select
+          onValueChange={setSelectedTag}
+          disabled={isLoadingAddTag}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a tag" />
+          </SelectTrigger>
+          <SelectContent>
+            {}
+            {availableTags.map((tag) => (
+              <SelectItem key={tag.id} value={tag.id}>
+                {tag.name}
+              </SelectItem>
+            ))}
+
+          </SelectContent>
+        </Select>
+        <Button
+          onClick={onAddTag}
+          disabled={isLoadingAddTag || !selectedTag}
+          variant="outline"
+          className="w-full mt-2 justify-center"
+          size="default"
+        >
+          Add Tag
+        </Button>
+      </div>
     </div>
   );
 };
 
 Actions.Skeleton = function ActionsSkeleton() {
   return (
-    <div className="space-y-2 mt-2">
+    <div className="space-y-4 mt-2">
       <Skeleton className="w-20 h-4 bg-neutral-200" />
       <Skeleton className="w-full h-8 bg-neutral-200" />
       <Skeleton className="w-full h-8 bg-neutral-200" />
+      <Skeleton className="w-full h-12 bg-neutral-200" />
     </div>
   );
 };

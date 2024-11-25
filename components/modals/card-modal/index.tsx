@@ -15,11 +15,13 @@ import { fetcher } from "@/lib/fetcher";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { ActivityIcon, Logs, MessageSquareText } from "lucide-react";
 import { Tabs, TabsTrigger, TabsContent, TabsList } from "@/components/ui/tabs";
+import { useParams } from "next/navigation";
 
 export const CardModal = () => {
   const id = useCardModal((state) => state.id);
   const isOpen = useCardModal((state) => state.isOpen);
   const onClose = useCardModal((state) => state.onClose);
+  const { boardId } = useParams();
 
   const { data: cardData } = useQuery<CardWithList>({
     queryKey: ["card", id],
@@ -35,6 +37,15 @@ export const CardModal = () => {
     queryKey: ["card-logs", id],
     queryFn: () => fetcher(`/api/cards/${id}/logs`),
   });
+
+  const { data: availableTags } = useQuery({
+    queryKey: ["available-tags", boardId],
+    queryFn: () => fetcher(`/api/boards/tags?boardId=${boardId}`),
+  });
+
+
+  // console log of availableTags
+  console.log(availableTags);
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -82,7 +93,7 @@ export const CardModal = () => {
           {!cardData ? (
             <Actions.Skeleton />
           ) : (
-            <Actions data={cardData} />
+            <Actions data={cardData} availableTags={availableTags ?? []} />
           )}
         </div>
       </SheetContent>
