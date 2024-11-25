@@ -13,7 +13,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FormInput } from "@/components/form/form-input";
 import { useCurrentWorkspace } from "@/hooks/use-current-workspace";
 import { Badge } from "@/components/ui/badge";
-import { Tag } from "@prisma/client";
 
 interface HeaderProps {
   data: CardWithList;
@@ -107,14 +106,6 @@ export const Header = ({
             className="font-semibold text-2xl px-1 text-neutral-700 bg-transparent border-transparent relative -left-1.5 w-[95%] focus-visible:bg-white focus-visible:border-input mb-0.5"
           />
         </form>
-        {data?.tags.map((tag: Tag) => (
-          <Badge
-            key={tag.id}
-            className={`${getRandomColor(tag.id)} text-white`}
-          >
-            {tag.name}
-          </Badge>
-        ))}
         <p className="text-sm text-muted-foreground mt-4">
           <Badge>{data.list.title}</Badge>
         </p>
