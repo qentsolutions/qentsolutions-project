@@ -21,6 +21,7 @@ interface FormInputProps {
   className?: string;
   defaultValue?: string;
   onBlur?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(({

@@ -1,20 +1,42 @@
 "use client";
 
-import { Card } from "@prisma/client";
+import { Card, Tag } from "@prisma/client";
 import { Draggable } from "@hello-pangea/dnd";
 import { useCardModal } from "@/hooks/use-card-modal";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
 
+interface CardWithTags extends Card {
+  tags: Tag[]; // Inclure les tags associés
+}
+
 interface CardItemProps {
-  data: Card;
+  data: CardWithTags;
   index: number;
 }
 
 export const CardItem = ({ data, index }: CardItemProps) => {
   const cardModal = useCardModal();
 
+  function getRandomColor(id: string): string {
+    const colors = [
+      "bg-red-500",
+      "bg-green-500",
+      "bg-blue-500",
+      "bg-yellow-500",
+      "bg-purple-500",
+      "bg-pink-500",
+      "bg-indigo-500",
+      "bg-teal-500",
+    ];
+    // Génère un index basé sur l'ID
+    const index = id
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+    return colors[index];
+  }
+  
   return (
     <Draggable draggableId={data.id} index={index}>
       {(provided) => (
@@ -28,9 +50,14 @@ export const CardItem = ({ data, index }: CardItemProps) => {
         >
           <div className="p-3 space-y-3">
             <div className="flex items-start gap-x-2">
-              <Badge variant="secondary" className="bg-red-100 text-red-700">High</Badge>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700">Marketing</Badge>
-              <Badge variant="secondary" className="ml-auto">PRO-1</Badge>
+              {data?.tags.map((tag: Tag) => (
+                <Badge
+                  key={tag.id}
+                  className={`${getRandomColor(tag.id)} text-white`}
+                >
+                  {tag.name}
+                </Badge>
+              ))}
             </div>
             <p className="text-sm font-medium">{data.title}</p>
             <div className="flex items-center justify-between">

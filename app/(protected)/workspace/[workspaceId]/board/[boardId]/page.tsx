@@ -5,6 +5,8 @@ import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CreateTagForm from "./components/create-tag-form";
+import { ListTags } from "./components/list-tags";
 
 interface BoardIdPageProps {
   params: {
@@ -41,6 +43,14 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
       lists: {
         include: {
           cards: {
+            include: {
+              tags: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
             orderBy: {
               order: "asc",
             },
@@ -95,6 +105,8 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
                 <TabsTrigger value="review">Review</TabsTrigger>
               </TabsList>
               <div className="mt-8"></div>
+              <CreateTagForm boardId={board.id} />
+              <ListTags boardId={board?.id} />
               <TabsContent value="overview">Overview</TabsContent>
               <TabsContent value="list">List</TabsContent>
               <TabsContent value="board">
