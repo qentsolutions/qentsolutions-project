@@ -106,7 +106,6 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
               </TabsList>
               <div className="mt-8"></div>
               <CreateTagForm boardId={board.id} />
-              <ListTags boardId={board?.id} />
               <TabsContent value="overview">Overview</TabsContent>
               <TabsContent value="list">List</TabsContent>
               <TabsContent value="board">

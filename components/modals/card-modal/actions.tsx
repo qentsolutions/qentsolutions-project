@@ -30,6 +30,7 @@ export const Actions = ({
   const cardModal = useCardModal();
   const { currentWorkspace } = useCurrentWorkspace();
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // Gérer l'état des tags associés à la carte
   const [linkedTags, setLinkedTags] = useState<string[]>(data.tags.map(tag => tag.name));
@@ -255,56 +256,50 @@ export const Actions = ({
         </DialogContent>
       </Dialog>
       <div>
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold mb-2">Tags</p>
-          {isSelectVisible ? (
-            <Plus
-              className="h-4 w-4 ml-1 text-muted-foreground cursor-pointer"
-              onClick={() => setIsSelectVisible(false)}
-            />
-          ) : (
-            <Plus
-              className="h-4 w-4 ml-1 text-muted-foreground cursor-pointer"
-              onClick={() => setIsSelectVisible(true)}
-            />
-          )}
-        </div>
+        <p className="text-xs font-semibold mb-2">Tags</p>
+        <div
+          className={`border rounded-md p-2 cursor-pointer ${isEditMode ? "ring-2 ring-blue-500" : ""}`}
+          onClick={() => setIsEditMode((prev) => !prev)} // Toggle l'état
+        >
+          <div className="flex flex-wrap gap-2">
+            {linkedTags.length === 0 ? (
+              <span className="text-gray-400 text-xs">Add tags</span>
+            ) : (
+              linkedTags.map((tag) => {
+                const tagId = availableTags.find((t) => t.name === tag)?.id || "";
+                return (
+                  <Badge
+                    key={tagId}
+                    className={`relative flex items-center ${getRandomColor(tagId)} group`}
+                  >
+                    {tag}
+                    <button
+                      className="absolute -right-2 -top-2 h-4 w-4 bg-white rounded-full flex items-center justify-center shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemoveTag(tagId);
+                      }}
+                    >
+                      <X className="h-3 w-3 text-red-500" />
+                    </button>
+                  </Badge>
+                );
+              })
+            )}
+          </div>
 
-        <div className="space-x-2 flex">
-          {/* Affichage des tags associés à la carte sous forme de badges */}
-          {linkedTags.map((tag) => {
-            const tagId = availableTags.find((t) => t.name === tag)?.id || "";
-            return (
-              <Badge
-                key={tagId}
-                className={`relative flex cursor-pointer items-center ${getRandomColor(tagId)} group`} // Ajout de la classe 'group' pour gérer le hover
-              >
-                {tag}
-                <button
-                  className="absolute -right-2 -top-2 h-4 w-4 bg-white rounded-full flex items-center justify-center shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity duration-300" // Visibilité de la croix uniquement lors du hover
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRemoveTag(tagId);
-                  }}
-                >
-                  <X className="h-3 w-3 text-red-500" />
-                </button>
-              </Badge>
-            );
-          })}
         </div>
-
-        {isSelectVisible && (
+        {isEditMode && (
           <Select
             value={selectedTag || ""}
             onValueChange={(value) => {
-              setSelectedTag(value); // Mettre à jour le tag sélectionné
-              onAddTag(value); // Ajouter immédiatement après la sélection
+              setSelectedTag(value);
+              onAddTag(value);
             }}
             disabled={isLoadingAddTag}
           >
             <SelectTrigger className="w-full mt-2">
-              <SelectValue placeholder={linkedTags.length === 0 ? "Select a tag" : linkedTags.join(", ")} />
+              <SelectValue placeholder="Select a tag" />
             </SelectTrigger>
             <SelectContent>
               {availableTags.map((tag) => (

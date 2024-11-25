@@ -44,9 +44,6 @@ export const CardModal = () => {
   });
 
 
-  // console log of availableTags
-  console.log(availableTags);
-
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className=" overflow-y-auto">

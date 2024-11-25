@@ -25,15 +25,12 @@ export const ListTags = ({ boardId }: ListTagsProps) => {
         if (!boardId) return;
 
         const fetchTags = async () => {
-            console.log("Fetching tags...");
             try {
                 const response = await fetch(`/api/boards/tags?boardId=${boardId}`, {
                     method: "GET",
                 });
-                console.log("API Response:", response);
                 if (!response.ok) throw new Error("Failed to fetch tags");
                 const data = await response.json();
-                console.log("Fetched data:", data);
                 setTags(data);
             } catch (error) {
                 console.error("Error fetching tags:", error);
@@ -48,7 +45,6 @@ export const ListTags = ({ boardId }: ListTagsProps) => {
 
     const handleSelectChange = (value: string) => {
         setSelectedTag(value);
-        console.log("Selected tag ID:", value);
     };
 
     return (

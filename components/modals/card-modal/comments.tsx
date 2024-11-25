@@ -53,7 +53,6 @@ export const Comments = ({ items, cardId }: CommentsProps) => {
       toast.success("Comment deleted!");
       setComments((prevComments) => {
         const updatedComments = prevComments.filter((comment) => comment.id !== commentId);
-        console.log("Updated comments after delete:", updatedComments); // Ajoutez ceci pour vérifier l'état
         return updatedComments;
       });
     },
