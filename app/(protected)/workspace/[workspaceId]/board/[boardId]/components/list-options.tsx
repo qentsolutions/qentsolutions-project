@@ -104,7 +104,6 @@ export const ListOptions = ({
             Copy list...
           </FormSubmit>
         </form>
-        <Separator />
         <form
           action={onDelete}
         >

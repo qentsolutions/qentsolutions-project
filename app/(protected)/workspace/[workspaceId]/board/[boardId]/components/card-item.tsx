@@ -36,7 +36,7 @@ export const CardItem = ({ data, index }: CardItemProps) => {
       .reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
     return colors[index];
   }
-  
+
   return (
     <Draggable draggableId={data.id} index={index}>
       {(provided) => (
@@ -49,7 +49,7 @@ export const CardItem = ({ data, index }: CardItemProps) => {
           className="truncate border bg-white rounded-lg shadow-sm hover:border-black"
         >
           <div className="p-3 space-y-3">
-            <div className="flex items-start gap-x-2">
+            <div className="flex items-start gap-x-2 gap-y-2 flex-wrap">
               {data?.tags.map((tag: Tag) => (
                 <Badge
                   key={tag.id}
