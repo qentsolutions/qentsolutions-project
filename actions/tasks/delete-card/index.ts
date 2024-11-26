@@ -1,10 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-
 import { db } from "@/lib/db";
 import { createSafeAction } from "@/lib/create-safe-action";
-
 import { DeleteCard } from "./schema";
 import { InputType, ReturnType } from "./types";
 import { createAuditLog } from "@/lib/create-audit-log";
@@ -22,6 +20,15 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let card;
 
   try {
+    // Supprimer les logs d'audit associés à cette carte
+    await db.auditLog.deleteMany({
+      where: {
+        entityId: id, // Assurez-vous que la suppression des logs est basée sur l'id de la carte
+        entityType: ENTITY_TYPE.CARD,
+      },
+    });
+
+    // Supprimer la carte
     card = await db.card.delete({
       where: {
         id,
@@ -32,21 +39,15 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         },
       },
     });
-
-    await createAuditLog({
-      entityTitle: card.title,
-      entityId: card.id,
-      entityType: ENTITY_TYPE.CARD,
-      action: ACTION.DELETE,
-      workspaceId,
-    });
   } catch (error) {
+    console.error("Error deleting card:", error);
     return {
       error: "Failed to delete.",
     };
   }
 
-  revalidatePath(`/workspace/${workspaceId}board/${boardId}`);
+  // Réactualiser la page pour refléter les changements
+  revalidatePath(`/workspace/${workspaceId}/board/${boardId}`);
   return { data: card };
 };
 
