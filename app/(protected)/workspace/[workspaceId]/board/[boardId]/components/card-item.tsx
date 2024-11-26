@@ -9,10 +9,21 @@ import { format } from "date-fns";
 
 interface CardWithTags extends Card {
   tags: Tag[]; // Inclure les tags associés
+  index: number;
 }
 
 interface CardItemProps {
-  data: CardWithTags;
+  data: {
+    id: string;
+    title: string;
+    order: number;
+    description: string | null;
+    listId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    tags?: Tag[];  // Les tags peuvent être optionnels si ce n'est pas toujours fourni
+    index?: number; // L'index peut être optionnel si ce n'est pas toujours fourni
+  };
   index: number;
 }
 
@@ -50,7 +61,7 @@ export const CardItem = ({ data, index }: CardItemProps) => {
         >
           <div className="p-3 space-y-3">
             <div className="flex items-start gap-x-2 gap-y-2 flex-wrap">
-              {data?.tags.map((tag: Tag) => (
+              {data?.tags?.map((tag: Tag) => (
                 <Badge
                   key={tag.id}
                   className={`${getRandomColor(tag.id)} text-white`}

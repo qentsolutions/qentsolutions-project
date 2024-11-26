@@ -7,8 +7,6 @@ import { createSafeAction } from "@/lib/create-safe-action";
 
 import { AddTagToCard } from "./schema";
 import { InputType, ReturnType } from "./types";
-import { createAuditLog } from "@/lib/create-audit-log";
-import { ACTION, ENTITY_TYPE } from "@prisma/client";
 import { currentUser } from "@/lib/auth";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
@@ -36,15 +34,6 @@ const handler = async (data: InputType): Promise<ReturnType> => {
           connect: { id: tagId },
         },
       },
-    });
-
-    // Créer un audit log pour l'ajout du tag
-    await createAuditLog({
-      entityTitle: updatedCard.title,
-      entityId: updatedCard.id,
-      entityType: ENTITY_TYPE.CARD,
-      action: ACTION.UPDATE,
-      workspaceId,
     });
 
     // Réactualiser la page pour refléter les changements
